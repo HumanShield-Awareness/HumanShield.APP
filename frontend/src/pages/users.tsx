@@ -158,7 +158,7 @@ export default function UsersPage() {
                     {user.is_active ? 'Aktiv' : 'Inaktiv'}
                   </td>
                   <td className="py-2 text-right whitespace-nowrap">
-                    <button onClick={() => toggleActive(user)} className="mr-3 text-accent hover:underline">
+                    <button onClick={() => toggleActive(user)} className="mr-3 text-text-secondary hover:text-accent hover:underline">
                       {user.is_active ? 'Deaktivieren' : 'Aktivieren'}
                     </button>
                     <button onClick={() => handleDelete(user)} className="text-status-danger hover:underline">

@@ -112,7 +112,7 @@ export default function TemplatesPage() {
                   <td className="py-2 text-right whitespace-nowrap">
                     <button
                       onClick={() => setMode({ kind: 'edit', template })}
-                      className="mr-3 text-accent hover:underline"
+                      className="mr-3 text-text-secondary hover:text-accent hover:underline"
                     >
                       Bearbeiten
                     </button>

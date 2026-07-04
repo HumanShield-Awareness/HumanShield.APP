@@ -133,12 +133,12 @@ export default function SendingProfilesPage() {
                   </td>
                   <td className="py-2 pr-4 font-mono text-sm text-text-secondary">{profile.from_email}</td>
                   <td className="py-2 text-right whitespace-nowrap">
-                    <button onClick={() => handleTest(profile)} className="mr-3 text-accent hover:underline">
+                    <button onClick={() => handleTest(profile)} className="mr-3 text-text-secondary hover:text-accent hover:underline">
                       Test-Mail
                     </button>
                     <button
                       onClick={() => setMode({ kind: 'edit', profile })}
-                      className="mr-3 text-accent hover:underline"
+                      className="mr-3 text-text-secondary hover:text-accent hover:underline"
                     >
                       Bearbeiten
                     </button>

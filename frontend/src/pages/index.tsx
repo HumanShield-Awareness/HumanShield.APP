@@ -98,7 +98,7 @@ export default function DashboardPage() {
                   <td className="py-2 pr-4 font-mono text-sm">{f.email}</td>
                   <td className="py-2 pr-4">{[f.first_name, f.last_name].filter(Boolean).join(' ')}</td>
                   <td className="py-2 pr-4">
-                    <Link to={`/results/${f.campaign_id}`} className="text-accent hover:underline">
+                    <Link to={`/results/${f.campaign_id}`} className="text-text-secondary hover:text-accent hover:underline">
                       {f.campaign_name}
                     </Link>
                   </td>

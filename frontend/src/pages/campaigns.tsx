@@ -139,10 +139,10 @@ export default function CampaignsPage() {
                     {statusLabels[campaign.status]}
                   </td>
                   <td className="py-2 text-right whitespace-nowrap">
-                    <button onClick={() => handleSend(campaign)} className="mr-3 text-accent hover:underline">
+                    <button onClick={() => handleSend(campaign)} className="mr-3 text-status-success hover:underline">
                       Senden
                     </button>
-                    <Link to={`/results/${campaign.id}`} className="mr-3 text-accent hover:underline">
+                    <Link to={`/results/${campaign.id}`} className="mr-3 text-text-secondary hover:text-accent hover:underline">
                       Ergebnisse
                     </Link>
                     <button onClick={() => handleDelete(campaign)} className="text-status-danger hover:underline">

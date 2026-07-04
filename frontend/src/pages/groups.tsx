@@ -132,10 +132,10 @@ export default function GroupsPage() {
                   <td className="py-2 pr-4">{group.name}</td>
                   <td className="py-2 pr-4 font-mono text-sm text-text-secondary">{group.member_count}</td>
                   <td className="py-2 text-right whitespace-nowrap">
-                    <button onClick={() => handleLdapImport(group)} className="mr-3 text-accent hover:underline">
+                    <button onClick={() => handleLdapImport(group)} className="mr-3 text-text-secondary hover:text-accent hover:underline">
                       LDAP-Import
                     </button>
-                    <button onClick={() => openEdit(group)} className="mr-3 text-accent hover:underline">
+                    <button onClick={() => openEdit(group)} className="mr-3 text-text-secondary hover:text-accent hover:underline">
                       Bearbeiten
                     </button>
                     <button onClick={() => handleDelete(group)} className="text-status-danger hover:underline">

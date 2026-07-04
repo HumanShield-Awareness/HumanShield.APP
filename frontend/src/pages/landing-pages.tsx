@@ -116,7 +116,7 @@ export default function LandingPagesPage() {
                     {new Date(page.updated_at).toLocaleString('de-DE')}
                   </td>
                   <td className="py-2 text-right whitespace-nowrap">
-                    <button onClick={() => setMode({ kind: 'edit', page })} className="mr-3 text-accent hover:underline">
+                    <button onClick={() => setMode({ kind: 'edit', page })} className="mr-3 text-text-secondary hover:text-accent hover:underline">
                       Bearbeiten
                     </button>
                     <button onClick={() => handleDelete(page)} className="text-status-danger hover:underline">
