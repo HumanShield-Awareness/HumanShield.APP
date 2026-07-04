@@ -202,6 +202,27 @@ class LdapConfig(Base):
         return self.bind_password_encrypted is not None
 
 
+class OidcConfig(Base):
+    """OIDC-Anbindung (optionale Zweitanmeldung), im Dashboard verwaltet.
+
+    Singleton. Das Client-Secret liegt verschluesselt (Fernet).
+    """
+
+    __tablename__ = "oidc_config"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    enabled: Mapped[bool] = mapped_column(default=False, nullable=False)
+    issuer: Mapped[str] = mapped_column(String(512), default="", nullable=False)
+    client_id: Mapped[str] = mapped_column(String(255), default="", nullable=False)
+    client_secret_encrypted: Mapped[str | None] = mapped_column(Text, nullable=True)
+    redirect_uri: Mapped[str] = mapped_column(String(1024), default="", nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    @property
+    def has_client_secret(self) -> bool:
+        return self.client_secret_encrypted is not None
+
+
 class Group(Base):
     """Wiederverwendbare Empfaengerliste (GoPhish: 'Group').
 

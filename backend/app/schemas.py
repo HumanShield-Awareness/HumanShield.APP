@@ -208,6 +208,26 @@ class LdapTestResult(BaseModel):
     detail: str
 
 
+# --- OIDC-Konfiguration (Settings-Dashboard) ---
+
+class OidcConfigUpdate(BaseModel):
+    enabled: bool | None = None
+    issuer: str | None = None
+    client_id: str | None = None
+    client_secret: str | None = None  # write-only, verschluesselt gespeichert
+    redirect_uri: str | None = None
+
+
+class OidcConfigOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    enabled: bool
+    issuer: str
+    client_id: str
+    has_client_secret: bool
+    redirect_uri: str
+
+
 # --- Groups (Empfaengerlisten) ---
 
 class GroupMemberIn(BaseModel):

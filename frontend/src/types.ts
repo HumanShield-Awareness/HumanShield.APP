@@ -97,6 +97,14 @@ export interface GroupSummary {
   updated_at: string
 }
 
+export interface OidcConfig {
+  enabled: boolean
+  issuer: string
+  client_id: string
+  has_client_secret: boolean
+  redirect_uri: string
+}
+
 export interface LdapConfig {
   enabled: boolean
   host: string

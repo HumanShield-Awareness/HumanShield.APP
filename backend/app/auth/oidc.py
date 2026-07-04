@@ -1,52 +1,77 @@
 """Generischer OIDC-Client.
 
 Kennt keinen bestimmten Identity Provider - Issuer, Client-ID, Client-Secret
-und Redirect-URI kommen ausschliesslich aus Settings (.env). Funktioniert mit
-jedem Standard-OIDC-Provider (Authentik, Keycloak, Entra ID, Okta, ...).
+und Redirect-URI kommen aus der im Dashboard verwalteten OidcConfig (DB).
+Funktioniert mit jedem Standard-OIDC-Provider (Authentik, Keycloak, Entra ID,
+Okta, ...). OIDC ist eine optionale Zweitanmeldung; ist es nicht aktiviert,
+laeuft die App vollstaendig ohne IdP.
 """
 import logging
 
 from authlib.integrations.starlette_client import OAuth
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
-from app.config import get_settings
 from app.database import get_db
-from app.models import User
+from app.models import OidcConfig, User
+from app.utils.crypto import decrypt
 from app.utils.security import create_access_token
 
 logger = logging.getLogger(__name__)
-settings = get_settings()
-
-# OIDC ist optional: lokaler Login (siehe app/auth/local.py) ist die primaere
-# Anmeldemethode, OIDC eine optionale Zweitmethode. Nur aktiv, wenn OIDC_ISSUER
-# konfiguriert ist - sonst kann die App auch ganz ohne IdP betrieben werden.
-oidc_enabled = settings.OIDC_ISSUER is not None
-
-oauth = OAuth()
-if oidc_enabled:
-    oauth.register(
-        name="oidc",
-        server_metadata_url=f"{settings.OIDC_ISSUER.rstrip('/')}/.well-known/openid-configuration",
-        client_id=settings.OIDC_CLIENT_ID,
-        client_secret=settings.OIDC_CLIENT_SECRET,
-        client_kwargs={"scope": "openid profile email"},
-    )
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
+def is_oidc_enabled(db: Session) -> bool:
+    """OIDC ist nutzbar, wenn aktiviert und vollstaendig konfiguriert."""
+    config = db.query(OidcConfig).first()
+    return bool(
+        config
+        and config.enabled
+        and config.issuer
+        and config.client_id
+        and config.client_secret_encrypted
+    )
+
+
+def _build_oauth(config: OidcConfig) -> OAuth:
+    """Baut pro Request einen OAuth-Client aus der aktuellen DB-Config."""
+    oauth = OAuth()
+    oauth.register(
+        name="oidc",
+        server_metadata_url=f"{config.issuer.rstrip('/')}/.well-known/openid-configuration",
+        client_id=config.client_id,
+        client_secret=decrypt(config.client_secret_encrypted),
+        client_kwargs={"scope": "openid profile email"},
+    )
+    return oauth
+
+
+def _config_or_400(db: Session) -> OidcConfig:
+    if not is_oidc_enabled(db):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="OIDC ist nicht konfiguriert/aktiviert (siehe Einstellungen).",
+        )
+    return db.query(OidcConfig).first()
+
+
 @router.get("/login")
-async def login(request: Request):
+async def login(request: Request, db: Session = Depends(get_db)):
     """Leitet zum konfigurierten OIDC-Provider weiter."""
-    return await oauth.oidc.authorize_redirect(request, settings.OIDC_REDIRECT_URI)
+    config = _config_or_400(db)
+    oauth = _build_oauth(config)
+    return await oauth.oidc.authorize_redirect(request, config.redirect_uri)
 
 
 @router.get("/callback")
 async def callback(request: Request, db: Session = Depends(get_db)):
     """Tauscht den Callback-Code gegen Tokens, legt/aktualisiert den User an und
     stellt eine eigene Session als JWT aus."""
+    config = _config_or_400(db)
+    oauth = _build_oauth(config)
+
     token = await oauth.oidc.authorize_access_token(request)
     userinfo = token.get("userinfo")
     if userinfo is None:
