@@ -1,4 +1,4 @@
-import { FileText, LayoutDashboard, LogOut, Mail, Moon, Server, Sun } from 'lucide-react'
+import { FileText, LayoutDashboard, LogOut, Mail, Moon, Server, Settings, Sun } from 'lucide-react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useTheme } from '../hooks/useTheme'
 import { logout } from '../services/auth'
@@ -8,6 +8,7 @@ const navItems = [
   { to: '/templates', label: 'Vorlagen', icon: FileText, end: false },
   { to: '/sending-profiles', label: 'Sending Profiles', icon: Server, end: false },
   { to: '/campaigns', label: 'Kampagnen', icon: Mail, end: false },
+  { to: '/settings', label: 'Einstellungen', icon: Settings, end: false },
 ]
 
 export default function Layout() {

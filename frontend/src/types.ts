@@ -52,3 +52,18 @@ export interface SendingProfile {
   created_at: string
   updated_at: string
 }
+
+export interface LdapConfig {
+  enabled: boolean
+  host: string
+  port: number
+  use_ssl: boolean
+  start_tls: boolean
+  bind_dn: string
+  has_bind_password: boolean
+  base_dn: string
+  user_filter: string
+  attr_email: string
+  attr_first_name: string
+  attr_last_name: string
+}
