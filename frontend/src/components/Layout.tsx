@@ -80,6 +80,11 @@ export default function Layout() {
               Logout
             </button>
           </div>
+
+          <div className="mx-3 mb-3 flex items-center justify-between rounded-md border border-border bg-bg px-3 py-2 text-xs text-text-secondary">
+            <span>PhishAware</span>
+            <span className="font-mono">v0.1.0</span>
+          </div>
         </div>
       </aside>
 

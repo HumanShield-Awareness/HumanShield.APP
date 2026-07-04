@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react'
 import PageHeader from '../components/PageHeader'
+import Toggle from '../components/Toggle'
 import { api } from '../services/api'
 import type { LdapConfig } from '../types'
 
@@ -86,10 +87,15 @@ export default function SettingsPage() {
       )}
 
       <form onSubmit={handleSave} className="flex max-w-2xl flex-col gap-4">
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={form.enabled} onChange={(e) => set('enabled', e.target.checked)} />
-          LDAP-Import aktivieren
-        </label>
+        <div className="elevated flex items-center justify-between gap-4 rounded-lg border border-border bg-surface p-4">
+          <div>
+            <div className="text-sm font-medium">LDAP-Import aktivieren</div>
+            <div className="text-sm text-text-secondary">
+              Erlaubt den Empfänger-Import aus dem Verzeichnisdienst.
+            </div>
+          </div>
+          <Toggle checked={form.enabled} onChange={(v) => set('enabled', v)} aria-label="LDAP-Import aktivieren" />
+        </div>
 
         <div className="flex gap-4">
           <label className={`${labelClass} flex-1`}>
@@ -102,15 +108,15 @@ export default function SettingsPage() {
           </label>
         </div>
 
-        <div className="flex gap-6">
-          <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" checked={form.use_ssl} onChange={(e) => set('use_ssl', e.target.checked)} />
+        <div className="flex gap-8">
+          <div className="flex items-center gap-3 text-sm">
+            <Toggle checked={form.use_ssl} onChange={(v) => set('use_ssl', v)} aria-label="LDAPS (SSL)" />
             LDAPS (SSL)
-          </label>
-          <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" checked={form.start_tls} onChange={(e) => set('start_tls', e.target.checked)} />
+          </div>
+          <div className="flex items-center gap-3 text-sm">
+            <Toggle checked={form.start_tls} onChange={(v) => set('start_tls', v)} aria-label="StartTLS" />
             StartTLS
-          </label>
+          </div>
         </div>
 
         <label className={labelClass}>

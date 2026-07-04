@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useState } from 'react'
+import Toggle from './Toggle'
 import type { LandingPage } from '../types'
 
 export interface LandingPageFormValues {
@@ -65,23 +66,23 @@ export default function LandingPageForm({ initial, onSubmit, onCancel, submittin
         />
       </label>
 
-      <label className="flex items-center gap-2 text-sm">
-        <input
-          type="checkbox"
+      <div className="flex items-center gap-3 text-sm">
+        <Toggle
           checked={captureCredentials}
-          onChange={(e) => setCaptureCredentials(e.target.checked)}
+          onChange={setCaptureCredentials}
+          aria-label="Abgeschickte Formulardaten erfassen"
         />
         Abgeschickte Formulardaten erfassen
-      </label>
-      <label className={`flex items-center gap-2 text-sm ${captureCredentials ? '' : 'opacity-50'}`}>
-        <input
-          type="checkbox"
+      </div>
+      <div className={`flex items-center gap-3 text-sm ${captureCredentials ? '' : 'opacity-50'}`}>
+        <Toggle
           checked={capturePasswords}
+          onChange={setCapturePasswords}
           disabled={!captureCredentials}
-          onChange={(e) => setCapturePasswords(e.target.checked)}
+          aria-label="Auch Passwörter erfassen"
         />
         Auch Passwörter erfassen
-      </label>
+      </div>
 
       <label className={labelClass}>
         Weiterleitung nach Absenden (optional)

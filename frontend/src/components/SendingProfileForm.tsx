@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useState } from 'react'
+import Toggle from './Toggle'
 import type { SendingProfile } from '../types'
 
 export type TlsMode = 'none' | 'starttls' | 'ssl'
@@ -128,10 +129,14 @@ export default function SendingProfileForm({ initial, onSubmit, onCancel, submit
           Muss zum Port passen: 587 → STARTTLS, 465 → SSL/TLS, 25 → keine.
         </span>
       </label>
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" checked={ignoreCertErrors} onChange={(e) => setIgnoreCertErrors(e.target.checked)} />
+      <div className="flex items-center gap-3 text-sm">
+        <Toggle
+          checked={ignoreCertErrors}
+          onChange={setIgnoreCertErrors}
+          aria-label="Zertifikatsfehler ignorieren"
+        />
         Zertifikatsfehler ignorieren
-      </label>
+      </div>
 
       <div className="flex gap-2">
         <button
