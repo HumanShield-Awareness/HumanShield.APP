@@ -38,9 +38,9 @@
   --color-border: #E2E5EA;
   --color-text-primary: #12151A;
   --color-text-secondary: #5B6472;
-  --color-accent: #0F7173;
-  /* Zweite Akzentfarbe fuer Verlaeufe (Teal -> Emerald) */
-  --color-accent-2: #17A398;
+  --color-accent: #ff570a;
+  /* Zweite Akzentfarbe fuer Verlaeufe (Orange -> helleres Orange) */
+  --color-accent-2: #ff8a3d;
 
   --color-status-success: #1A7F4B;
   --color-status-warning: #B7791F;
@@ -53,8 +53,8 @@
   --color-border: #232833;
   --color-text-primary: #E7EAEE;
   --color-text-secondary: #8B93A3;
-  --color-accent: #2DD4CF;
-  --color-accent-2: #5EEAD4;
+  --color-accent: #ff570a;
+  --color-accent-2: #ff9a55;
 
   --color-status-success: #34D399;
   --color-status-warning: #FBBF24;
