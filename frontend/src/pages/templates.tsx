@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 import PageScaffold from '../components/PageScaffold'
 import TemplateForm, { TemplateFormValues } from '../components/TemplateForm'
+import { useI18n } from '../i18n'
 import { api } from '../services/api'
 import type { Template } from '../types'
 
@@ -10,6 +11,7 @@ type Mode =
   | { kind: 'edit'; template: Template }
 
 export default function TemplatesPage() {
+  const { t } = useI18n()
   const [templates, setTemplates] = useState<Template[]>([])
   const [loading, setLoading] = useState(true)
   const [mode, setMode] = useState<Mode>({ kind: 'list' })
@@ -39,20 +41,20 @@ export default function TemplatesPage() {
       setMode({ kind: 'list' })
       load()
     } catch {
-      setError('Vorlage konnte nicht gespeichert werden.')
+      setError(t('tpl.err.save'))
     } finally {
       setSubmitting(false)
     }
   }
 
   async function handleDelete(template: Template) {
-    if (!window.confirm(`Vorlage „${template.name}“ wirklich löschen?`)) return
+    if (!window.confirm(t('common.confirmDelete', { name: template.name }))) return
     setError(null)
     try {
       await api.delete(`/templates/${template.id}`)
       load()
     } catch {
-      setError('Vorlage konnte nicht gelöscht werden.')
+      setError(t('tpl.err.delete'))
     }
   }
 
@@ -67,13 +69,13 @@ export default function TemplatesPage() {
       const res = await api.post<TemplateFormValues>('/templates/import-eml', form)
       setMode({ kind: 'create', draft: res.data })
     } catch {
-      setError('E-Mail konnte nicht importiert werden (gültige .eml-Datei?).')
+      setError(t('tpl.err.import'))
     }
   }
 
   if (mode.kind !== 'list') {
     return (
-      <PageScaffold title={mode.kind === 'edit' ? 'Vorlage bearbeiten' : 'Neue Vorlage'} guidanceKey="template-editor">
+      <PageScaffold title={mode.kind === 'edit' ? t('tpl.editTitle') : t('tpl.newTitle')} guidanceKey="template-editor">
         {error && <p className="mb-3 text-sm text-status-danger">{error}</p>}
         <TemplateForm
           initial={mode.kind === 'edit' ? mode.template : mode.kind === 'create' ? mode.draft ?? null : null}
@@ -91,7 +93,7 @@ export default function TemplatesPage() {
 
   return (
     <PageScaffold
-      title="Vorlagen"
+      title={t('nav.templates')}
       guidanceKey="templates"
       actions={
         <div className="flex items-center gap-2">
@@ -99,16 +101,16 @@ export default function TemplatesPage() {
             onClick={() => fileInputRef.current?.click()}
             className="flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm text-text-primary hover:bg-bg"
           >
-            E-Mail hochladen
+            {t('tpl.upload')}
             <span className="rounded-full bg-blue-600 px-1.5 py-0.5 text-[10px] font-semibold uppercase leading-none tracking-wide text-white">
-              Business
+              {t('badge.business')}
             </span>
           </button>
           <button
             onClick={() => setMode({ kind: 'create' })}
             className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white"
           >
-            Neue Vorlage
+            {t('tpl.new')}
           </button>
         </div>
       }
@@ -118,17 +120,17 @@ export default function TemplatesPage() {
       {error && <p className="mb-3 text-sm text-status-danger">{error}</p>}
 
       {loading ? (
-        <p className="text-text-secondary">Lade Vorlagen...</p>
+        <p className="text-text-secondary">{t('tpl.loading')}</p>
       ) : templates.length === 0 ? (
-        <p className="text-text-secondary">Noch keine Vorlage vorhanden &rarr; Erste Vorlage anlegen oder eine E-Mail hochladen.</p>
+        <p className="text-text-secondary">{t('tpl.empty')}</p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-border text-left text-sm text-text-secondary">
-                <th className="py-2 pr-4 font-medium">Name</th>
-                <th className="py-2 pr-4 font-medium">Betreff</th>
-                <th className="py-2 pr-4 font-medium">Geändert</th>
+                <th className="py-2 pr-4 font-medium">{t('common.name')}</th>
+                <th className="py-2 pr-4 font-medium">{t('common.subject')}</th>
+                <th className="py-2 pr-4 font-medium">{t('common.changed')}</th>
                 <th className="py-2 font-medium" />
               </tr>
             </thead>
@@ -138,17 +140,17 @@ export default function TemplatesPage() {
                   <td className="py-2 pr-4">{template.name}</td>
                   <td className="py-2 pr-4 text-text-secondary">{template.subject}</td>
                   <td className="py-2 pr-4 font-mono text-sm text-text-secondary">
-                    {new Date(template.updated_at).toLocaleString('de-DE')}
+                    {new Date(template.updated_at).toLocaleString()}
                   </td>
                   <td className="py-2 text-right whitespace-nowrap">
                     <button
                       onClick={() => setMode({ kind: 'edit', template })}
                       className="mr-3 text-text-secondary hover:text-accent hover:underline"
                     >
-                      Bearbeiten
+                      {t('common.edit')}
                     </button>
                     <button onClick={() => handleDelete(template)} className="text-status-danger hover:underline">
-                      Löschen
+                      {t('common.delete')}
                     </button>
                   </td>
                 </tr>

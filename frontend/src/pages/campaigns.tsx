@@ -3,15 +3,16 @@ import { Link } from 'react-router-dom'
 import Badge, { BadgeTone } from '../components/Badge'
 import CampaignWizard, { CampaignWizardValues } from '../components/CampaignWizard'
 import PageScaffold from '../components/PageScaffold'
+import { useI18n } from '../i18n'
 import { api } from '../services/api'
 import type { Campaign, GroupSummary, LandingPage, SendingProfile, Template } from '../types'
 
-const statusLabels: Record<Campaign['status'], string> = {
-  draft: 'Entwurf',
-  scheduled: 'Geplant',
-  running: 'Läuft',
-  completed: 'Abgeschlossen',
-  cancelled: 'Abgebrochen',
+const statusKeys: Record<Campaign['status'], string> = {
+  draft: 'camp.status.draft',
+  scheduled: 'camp.status.scheduled',
+  running: 'camp.status.running',
+  completed: 'camp.status.completed',
+  cancelled: 'camp.status.cancelled',
 }
 
 const statusTone: Record<Campaign['status'], BadgeTone> = {
@@ -23,6 +24,7 @@ const statusTone: Record<Campaign['status'], BadgeTone> = {
 }
 
 export default function CampaignsPage() {
+  const { t } = useI18n()
   const [campaigns, setCampaigns] = useState<Campaign[]>([])
   const [templates, setTemplates] = useState<Template[]>([])
   const [profiles, setProfiles] = useState<SendingProfile[]>([])
@@ -54,43 +56,41 @@ export default function CampaignsPage() {
       await api.post('/campaigns', values)
       setCreating(false)
       await loadCampaigns()
-      setMessage({ kind: 'info', text: 'Kampagne wurde angelegt.' })
+      setMessage({ kind: 'info', text: t('camp.created') })
     } catch {
-      setMessage({ kind: 'error', text: 'Kampagne konnte nicht angelegt werden.' })
+      setMessage({ kind: 'error', text: t('camp.err.create') })
     } finally {
       setSubmitting(false)
     }
   }
 
   async function handleSend(campaign: Campaign) {
-    if (!window.confirm(`Kampagne „${campaign.name}“ jetzt versenden?`)) return
-    setMessage({ kind: 'info', text: 'Versand läuft...' })
+    if (!window.confirm(t('camp.confirmSend', { name: campaign.name }))) return
+    setMessage({ kind: 'info', text: t('camp.sendRunning') })
     try {
       const res = await api.post<{ success: number; failed: number }>(`/campaigns/${campaign.id}/send`)
-      setMessage({ kind: 'info', text: `Versand abgeschlossen: ${res.data.success} ok, ${res.data.failed} fehlgeschlagen.` })
+      setMessage({ kind: 'info', text: t('camp.sendDone', { success: res.data.success, failed: res.data.failed }) })
       await loadCampaigns()
     } catch {
-      setMessage({ kind: 'error', text: 'Versand fehlgeschlagen.' })
+      setMessage({ kind: 'error', text: t('camp.err.send') })
     }
   }
 
   async function handleDelete(campaign: Campaign) {
-    if (!window.confirm(`Kampagne „${campaign.name}“ wirklich löschen?`)) return
+    if (!window.confirm(t('common.confirmDelete', { name: campaign.name }))) return
     setMessage(null)
     try {
       await api.delete(`/campaigns/${campaign.id}`)
       await loadCampaigns()
     } catch {
-      setMessage({ kind: 'error', text: 'Kampagne konnte nicht gelöscht werden.' })
+      setMessage({ kind: 'error', text: t('camp.err.delete') })
     }
   }
 
   if (creating) {
     return (
-      <PageScaffold title="Neue Kampagne" guidanceKey="campaign-editor">
-        {templates.length === 0 && (
-          <p className="mb-3 text-sm text-status-danger">Erst eine Vorlage anlegen.</p>
-        )}
+      <PageScaffold title={t('camp.newTitle')} guidanceKey="campaign-editor">
+        {templates.length === 0 && <p className="mb-3 text-sm text-status-danger">{t('camp.needTemplate')}</p>}
         <CampaignWizard
           templates={templates}
           profiles={profiles}
@@ -106,7 +106,7 @@ export default function CampaignsPage() {
 
   return (
     <PageScaffold
-      title="Kampagnen"
+      title={t('nav.campaigns')}
       guidanceKey="campaigns"
       actions={
         <button
@@ -114,7 +114,7 @@ export default function CampaignsPage() {
           disabled={templates.length === 0}
           className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
         >
-          Neue Kampagne
+          {t('camp.new')}
         </button>
       }
     >
@@ -125,16 +125,16 @@ export default function CampaignsPage() {
       )}
 
       {loading ? (
-        <p className="text-text-secondary">Lade Kampagnen...</p>
+        <p className="text-text-secondary">{t('camp.loading')}</p>
       ) : campaigns.length === 0 ? (
-        <p className="text-text-secondary">Noch keine Kampagne gestartet &rarr; Erste Kampagne anlegen.</p>
+        <p className="text-text-secondary">{t('camp.empty')}</p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-border text-left text-sm text-text-secondary">
-                <th className="py-2 pr-4 font-medium">Name</th>
-                <th className="py-2 pr-4 font-medium">Status</th>
+                <th className="py-2 pr-4 font-medium">{t('common.name')}</th>
+                <th className="py-2 pr-4 font-medium">{t('common.status')}</th>
                 <th className="py-2 font-medium" />
               </tr>
             </thead>
@@ -143,17 +143,17 @@ export default function CampaignsPage() {
                 <tr key={campaign.id} className="border-b border-border">
                   <td className="py-2 pr-4">{campaign.name}</td>
                   <td className="py-2 pr-4">
-                    <Badge tone={statusTone[campaign.status]}>{statusLabels[campaign.status]}</Badge>
+                    <Badge tone={statusTone[campaign.status]}>{t(statusKeys[campaign.status])}</Badge>
                   </td>
                   <td className="py-2 text-right whitespace-nowrap">
                     <button onClick={() => handleSend(campaign)} className="mr-3 text-status-success hover:underline">
-                      Senden
+                      {t('camp.send')}
                     </button>
                     <Link to={`/results/${campaign.id}`} className="mr-3 text-text-secondary hover:text-accent hover:underline">
-                      Ergebnisse
+                      {t('camp.results')}
                     </Link>
                     <button onClick={() => handleDelete(campaign)} className="text-status-danger hover:underline">
-                      Löschen
+                      {t('common.delete')}
                     </button>
                   </td>
                 </tr>
