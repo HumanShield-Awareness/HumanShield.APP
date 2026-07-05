@@ -1,4 +1,4 @@
-import { Blocks, CircleUser, FileText, Globe, LayoutDashboard, LogOut, Mail, Moon, Server, Settings, Sun, UserCog, Users, type LucideIcon } from 'lucide-react'
+import { Blocks, Brain, Building2, CircleUser, FileText, Globe, LayoutDashboard, LogOut, Mail, Moon, Palette, Server, Settings, Sun, UserCog, Users, type LucideIcon } from 'lucide-react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useMe } from '../hooks/useMe'
 import { useTheme } from '../hooks/useTheme'
@@ -30,6 +30,9 @@ const adminNav: NavItem[] = [
   { to: '/users', label: 'Benutzer', icon: UserCog, end: false },
   { to: '/settings', label: 'Einstellungen', icon: Settings, end: false },
   { to: '/integrations', label: 'Integrationen', icon: Blocks, end: false, badge: 'Enterprise' },
+  { to: '/white-label', label: 'White-Label', icon: Palette, end: false, badge: 'Enterprise' },
+  { to: '/multi-tenant', label: 'Multi-Tenant', icon: Building2, end: false, badge: 'Enterprise' },
+  { to: '/ai-scoring', label: 'AI-Scoring', icon: Brain, end: false, badge: 'Enterprise' },
 ]
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -47,7 +50,7 @@ function NavItems({ items }: { items: NavItem[] }) {
           <Icon size={16} />
           {label}
           {badge && (
-            <span className="ml-auto rounded-full bg-[#16c60c] px-1.5 py-0.5 text-[10px] font-semibold uppercase leading-none tracking-wide text-white shadow-[0_0_6px_rgba(22,198,12,0.6)]">
+            <span className="ml-auto rounded-full bg-green-600 px-1.5 py-0.5 text-[10px] font-semibold uppercase leading-none tracking-wide text-white">
               {badge}
             </span>
           )}
