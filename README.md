@@ -119,12 +119,12 @@ Beiträge sind willkommen. Bitte für Änderungen einen Branch anlegen, aussagek
 
 ## 📄 Lizenz
 
-Der Kern steht unter der **[Business Source License 1.1](LICENSE)** — der Quellcode ist einsehbar und für den Eigenbedarf produktiv nutzbar; **nicht** erlaubt ist das Anbieten als konkurrierender gehosteter Dienst. Am **Change Date** geht jede Version automatisch in **Apache 2.0** über. Die kommerziellen Enterprise-Add-ons werden separat lizenziert. Für abweichende Lizenzvereinbarungen: `support@secure-bits.org`.
+Der Kern steht unter der **[Business Source License 1.1](LICENSE)** — der Quellcode ist einsehbar und für den **Eigenbedarf** produktiv nutzbar. Das Anbieten als gehosteter/verwalteter Dienst für Dritte — etwa Betrieb durch **MSSPs/Dienstleister** für deren Kunden — erfordert eine **kommerzielle Lizenz**. Am **Change Date** geht jede Version automatisch in **Apache 2.0** über. Die Enterprise-Add-ons werden separat lizenziert. Kontakt für Lizenzen: `kontakt@humanshield.app`.
 
 ---
 
 <div align="center">
 
-Ein Projekt von **HumanShield-Awareness** · verantwortungsvoll für autorisierte Awareness-Schulungen einsetzen.
+Ein Projekt von **HumanShield-Awareness UG** · verantwortungsvoll für autorisierte Awareness-Schulungen einsetzen.
 
 </div>

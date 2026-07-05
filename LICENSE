@@ -7,23 +7,25 @@ License text copyright (c) 2017 MariaDB Corporation Ab, All Rights Reserved.
 
 Parameters
 
-Licensor:             HumanShield-Awareness
+Licensor:             HumanShield-Awareness UG
 
 Licensed Work:        HumanShield.APP
-                      The Licensed Work is (c) 2026 HumanShield-Awareness.
+                      The Licensed Work is (c) 2026 HumanShield-Awareness UG.
 
-Additional Use Grant: You may make production use of the Licensed Work,
-                      provided that you do not offer the Licensed Work to
-                      third parties as a hosted or managed service where the
-                      Licensed Work provides all or substantially all of the
-                      functionality of that service.
+Additional Use Grant: You may make production use of the Licensed Work for
+                      your own internal awareness programs. Offering the
+                      Licensed Work to third parties as a hosted or managed
+                      service — including operation by managed security
+                      service providers (MSSPs) or other service providers on
+                      behalf of their customers — requires a separate
+                      commercial license from the Licensor.
 
 Change Date:          2030-07-05
 
 Change License:       Apache License, Version 2.0
 
 For information about alternative licensing arrangements for the Licensed Work,
-please contact support@secure-bits.org.
+please contact kontakt@humanshield.app.
 
 -----------------------------------------------------------------------------
 
