@@ -1,0 +1,18 @@
+import { Brain } from 'lucide-react'
+import EnterprisePlaceholder from '../../components/EnterprisePlaceholder'
+
+export default function AiScoringPage() {
+  return (
+    <EnterprisePlaceholder
+      title="AI-Scoring"
+      icon={Brain}
+      tagline="Risiko-Bewertung mit KI-Unterstützung."
+      intro="Bewerte das Phishing-Risiko pro Empfänger und Kampagne automatisch und erkenne gefährdete Gruppen früher."
+      features={[
+        'Risiko-Score je Empfänger und Abteilung',
+        'Automatische Erkennung auffälliger Muster',
+        'Empfehlungen für gezielte Trainings',
+      ]}
+    />
+  )
+}

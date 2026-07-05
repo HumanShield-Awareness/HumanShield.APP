@@ -3,6 +3,9 @@ import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-d
 import IntegrationsLayout from './components/IntegrationsLayout'
 import Layout from './components/Layout'
 import SettingsLayout from './components/SettingsLayout'
+import AiScoringPage from './pages/enterprise/ai-scoring'
+import MultiTenantPage from './pages/enterprise/multi-tenant'
+import WhiteLabelPage from './pages/enterprise/whitelabel'
 import IntegrationsOverviewPage from './pages/integrations/overview'
 import AuditEventsPage from './pages/settings/audit-events'
 import SecuritySettingsPage from './pages/settings/security'
@@ -67,6 +70,9 @@ export default function App() {
             <Route index element={<Navigate to="/integrations/overview" replace />} />
             <Route path="overview" element={<IntegrationsOverviewPage />} />
           </Route>
+          <Route path="/white-label" element={<WhiteLabelPage />} />
+          <Route path="/multi-tenant" element={<MultiTenantPage />} />
+          <Route path="/ai-scoring" element={<AiScoringPage />} />
           <Route path="/results/:campaignId" element={<ResultsPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
