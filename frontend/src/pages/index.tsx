@@ -117,6 +117,16 @@ export default function DashboardPage() {
           </table>
         </div>
       )}
+
+      <div className="mt-10 border-t border-border pt-6">
+        <p className="max-w-3xl text-sm text-text-secondary">
+          Willkommen im Control-Center. Hier hast du alle laufenden Phishing-Awareness-Kampagnen auf
+          einen Blick: Die Kacheln oben zeigen die Gesamtzahlen — von versendeten Mails über Öffnungen
+          bis zu geklickten Links und abgeschickten Daten. Die Tabelle „Nicht bestanden“ listet
+          Empfänger, die auf eine Simulation hereingefallen sind. Zum Starten legst du unter „Kampagnen“
+          eine neue Kampagne an; Vorlagen, Gruppen und Landing Pages dafür findest du in der Seitenleiste.
+        </p>
+      </div>
     </>
   )
 }
