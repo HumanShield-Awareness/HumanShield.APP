@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Badge from '../components/Badge'
 import PageHeader from '../components/PageHeader'
+import { useI18n } from '../i18n'
 import { api } from '../services/api'
 
 interface Summary {
@@ -25,13 +26,13 @@ interface Failed {
 
 type Tone = 'neutral' | 'accent' | 'warning' | 'danger'
 
-const tiles: { key: keyof Summary; label: string; tone: Tone }[] = [
-  { key: 'campaigns', label: 'Kampagnen', tone: 'neutral' },
-  { key: 'recipients', label: 'Empfänger', tone: 'neutral' },
-  { key: 'sent', label: 'Versendet', tone: 'accent' },
-  { key: 'opened', label: 'Geöffnet', tone: 'neutral' },
-  { key: 'clicked', label: 'Geklickt', tone: 'warning' },
-  { key: 'submitted', label: 'Daten abgeschickt', tone: 'danger' },
+const tiles: { key: keyof Summary; labelKey: string; tone: Tone }[] = [
+  { key: 'campaigns', labelKey: 'dash.tile.campaigns', tone: 'neutral' },
+  { key: 'recipients', labelKey: 'dash.tile.recipients', tone: 'neutral' },
+  { key: 'sent', labelKey: 'dash.tile.sent', tone: 'accent' },
+  { key: 'opened', labelKey: 'dash.tile.opened', tone: 'neutral' },
+  { key: 'clicked', labelKey: 'dash.tile.clicked', tone: 'warning' },
+  { key: 'submitted', labelKey: 'dash.tile.submitted', tone: 'danger' },
 ]
 
 const toneNumber: Record<Tone, string> = {
@@ -50,6 +51,7 @@ const toneTile: Record<Tone, string> = {
 }
 
 export default function DashboardPage() {
+  const { t } = useI18n()
   const [summary, setSummary] = useState<Summary | null>(null)
   const [failed, setFailed] = useState<Failed[]>([])
   const [loading, setLoading] = useState(true)
@@ -61,36 +63,34 @@ export default function DashboardPage() {
     ]).finally(() => setLoading(false))
   }, [])
 
-  if (loading) return <p className="text-text-secondary">Lade Übersicht...</p>
+  if (loading) return <p className="text-text-secondary">{t('dash.loading')}</p>
 
   return (
     <>
-      <PageHeader title="Control-Center" subtitle="Überblick über Kampagnen und Awareness-Ergebnisse" />
+      <PageHeader title={t('nav.controlCenter')} subtitle={t('dash.subtitle')} />
 
       <div className="mb-8 grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))' }}>
-        {tiles.map(({ key, label, tone }) => (
+        {tiles.map(({ key, labelKey, tone }) => (
           <div key={key} className={`elevated rounded-lg border p-4 ${toneTile[tone]}`}>
-            <div className="text-sm text-text-secondary">{label}</div>
+            <div className="text-sm text-text-secondary">{t(labelKey)}</div>
             <div className={`mt-1 font-mono text-3xl font-semibold ${toneNumber[tone]}`}>{summary?.[key] ?? 0}</div>
           </div>
         ))}
       </div>
 
-      <h2 className="mb-3 text-lg font-semibold">Nicht bestanden</h2>
+      <h2 className="mb-3 text-lg font-semibold">{t('dash.failed.heading')}</h2>
       {failed.length === 0 ? (
-        <p className="text-text-secondary">
-          Noch niemand hat geklickt oder Daten abgeschickt — oder es wurde noch keine Kampagne ausgewertet.
-        </p>
+        <p className="text-text-secondary">{t('dash.failed.empty')}</p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-border text-left text-sm text-text-secondary">
-                <th className="py-2 pr-4 font-medium">E-Mail</th>
-                <th className="py-2 pr-4 font-medium">Name</th>
-                <th className="py-2 pr-4 font-medium">Kampagne</th>
-                <th className="py-2 pr-4 font-medium">Ereignis</th>
-                <th className="py-2 font-medium">Zeitpunkt</th>
+                <th className="py-2 pr-4 font-medium">{t('common.email')}</th>
+                <th className="py-2 pr-4 font-medium">{t('common.name')}</th>
+                <th className="py-2 pr-4 font-medium">{t('dash.col.campaign')}</th>
+                <th className="py-2 pr-4 font-medium">{t('dash.col.event')}</th>
+                <th className="py-2 font-medium">{t('dash.col.time')}</th>
               </tr>
             </thead>
             <tbody>
@@ -105,11 +105,11 @@ export default function DashboardPage() {
                   </td>
                   <td className="py-2 pr-4">
                     <Badge tone={f.status === 'submitted' ? 'danger' : 'warning'}>
-                      {f.status === 'submitted' ? 'Daten abgeschickt' : 'Link geklickt'}
+                      {f.status === 'submitted' ? t('dash.event.submitted') : t('dash.event.clicked')}
                     </Badge>
                   </td>
                   <td className="py-2 font-mono text-sm text-text-secondary">
-                    {new Date(f.occurred_at).toLocaleString('de-DE')}
+                    {new Date(f.occurred_at).toLocaleString()}
                   </td>
                 </tr>
               ))}
@@ -119,13 +119,7 @@ export default function DashboardPage() {
       )}
 
       <div className="mt-10 border-t border-border pt-6">
-        <p className="max-w-3xl text-sm text-text-secondary">
-          Willkommen im Control-Center. Hier hast du alle laufenden Phishing-Awareness-Kampagnen auf
-          einen Blick: Die Kacheln oben zeigen die Gesamtzahlen — von versendeten Mails über Öffnungen
-          bis zu geklickten Links und abgeschickten Daten. Die Tabelle „Nicht bestanden“ listet
-          Empfänger, die auf eine Simulation hereingefallen sind. Zum Starten legst du unter „Kampagnen“
-          eine neue Kampagne an; Vorlagen, Gruppen und Landing Pages dafür findest du in der Seitenleiste.
-        </p>
+        <p className="max-w-3xl text-sm text-text-secondary">{t('dash.intro')}</p>
       </div>
     </>
   )
