@@ -52,3 +52,5 @@ tmp/
 CLAUDE.MD
 docs
 Screenshots/
+# Claude Code – persönliche lokale Einstellungen
+.claude/settings.local.json
