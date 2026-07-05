@@ -119,12 +119,12 @@ Contributions are welcome. Please create a branch for your changes, write meanin
 
 ## 📄 License
 
-The core is licensed under the **[Business Source License 1.1](LICENSE)** — the source is available and may be used in production for your own needs; offering it as a competing hosted service is **not** permitted. On the **Change Date**, each version automatically converts to **Apache 2.0**. The commercial enterprise add-ons are licensed separately. For alternative licensing arrangements: `support@secure-bits.org`.
+The core is licensed under the **[Business Source License 1.1](LICENSE)** — the source is available and may be used in production for your **own internal needs**. Offering it to third parties as a hosted or managed service — including operation by **MSSPs/service providers** for their customers — requires a **commercial license**. On the **Change Date**, each version automatically converts to **Apache 2.0**. The enterprise add-ons are licensed separately. Licensing contact: `kontakt@humanshield.app`.
 
 ---
 
 <div align="center">
 
-A project by **HumanShield-Awareness** · use responsibly for authorized awareness training only.
+A project by **HumanShield-Awareness UG** · use responsibly for authorized awareness training only.
 
 </div>
