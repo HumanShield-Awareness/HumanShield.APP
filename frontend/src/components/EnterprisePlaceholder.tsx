@@ -4,6 +4,7 @@
 
 import { Lock, type LucideIcon } from 'lucide-react'
 import PageScaffold from './PageScaffold'
+import { useI18n } from '../i18n'
 
 interface Props {
   title: string
@@ -16,6 +17,7 @@ interface Props {
 
 /** Platzhalterseite für ein (noch nicht aktiviertes) Enterprise-Feature. */
 export default function EnterprisePlaceholder({ title, icon: Icon, tagline, intro, features, breadcrumb }: Props) {
+  const { t } = useI18n()
   return (
     <PageScaffold title={title} subtitle={tagline} breadcrumb={breadcrumb}>
       <div className="max-w-2xl rounded-lg border border-border bg-surface p-6">
@@ -24,7 +26,7 @@ export default function EnterprisePlaceholder({ title, icon: Icon, tagline, intr
             <Icon size={20} />
           </span>
           <span className="rounded-full bg-green-600 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-white">
-            Enterprise
+            {t('badge.enterprise')}
           </span>
         </div>
 
@@ -40,8 +42,7 @@ export default function EnterprisePlaceholder({ title, icon: Icon, tagline, intr
         </ul>
 
         <div className="mt-6 rounded-md border border-dashed border-border p-4 text-sm text-text-secondary">
-          Diese Funktion ist Teil des <span className="font-medium text-text-primary">Enterprise-Pakets</span> und in
-          dieser Installation nicht aktiviert.
+          {t('ent.notActivated')}
         </div>
       </div>
     </PageScaffold>

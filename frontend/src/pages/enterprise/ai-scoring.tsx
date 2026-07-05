@@ -4,23 +4,21 @@
 
 import { Blocks, Brain } from 'lucide-react'
 import EnterprisePlaceholder from '../../components/EnterprisePlaceholder'
+import { useI18n } from '../../i18n'
 
 export default function AiScoringPage() {
+  const { t } = useI18n()
   return (
     <EnterprisePlaceholder
-      title="AI-Scoring"
+      title={t('integrations.aiScoring')}
       icon={Brain}
       breadcrumb={[
-        { label: 'Integrationen', icon: Blocks },
-        { label: 'AI-Scoring', icon: Brain },
+        { label: t('nav.integrations'), icon: Blocks },
+        { label: t('integrations.aiScoring'), icon: Brain },
       ]}
-      tagline="Risiko-Bewertung mit KI-Unterstützung."
-      intro="Bewerte das Phishing-Risiko pro Empfänger und Kampagne automatisch und erkenne gefährdete Gruppen früher."
-      features={[
-        'Risiko-Score je Empfänger und Abteilung',
-        'Automatische Erkennung auffälliger Muster',
-        'Empfehlungen für gezielte Trainings',
-      ]}
+      tagline={t('ai.tagline')}
+      intro={t('ai.intro')}
+      features={[t('ai.f1'), t('ai.f2'), t('ai.f3')]}
     />
   )
 }

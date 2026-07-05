@@ -450,6 +450,43 @@ export const translations: Record<Lang, Record<string, string>> = {
     'lpf.capturePw': 'Auch Passwörter erfassen',
     'lpf.redirect': 'Weiterleitung nach Absenden (optional)',
     'lpf.create': 'Landing Page anlegen',
+
+    // Anleitungs-Panel (PageScaffold)
+    'guide.title': 'Anleitung',
+    'guide.variables': 'Variablen',
+
+    // Enterprise-Platzhalter
+    'ent.notActivated': 'Diese Funktion ist Teil des Enterprise-Pakets und in dieser Installation nicht aktiviert.',
+
+    // Integrationen-Übersicht
+    'io.subtitle': 'Verbindungen zu externen Systemen — hier werden künftige Integrationen konfiguriert.',
+    'io.noneTitle': 'Noch keine Integrationen aktiv.',
+    'io.noneBody':
+      'Dieser Bereich ist für spätere Erweiterungen vorbereitet — etwa die Anbindung an Ticketing-, SIEM- oder Chat-Systeme. Neue Integrationen erscheinen dann als eigene Punkte in der linken Spalte, analog zum Einstellungen-Menü.',
+
+    // White-Label
+    'wl.tagline': 'Die Plattform im eigenen Marken-Auftritt.',
+    'wl.intro':
+      'Betreibe HumanShield.APP unter deiner eigenen Marke – Logo, Farben, Absenderdomains und Portal-URL individuell für deine Kunden.',
+    'wl.f1': 'Eigenes Logo, Farbschema und Favicon',
+    'wl.f2': 'Eigene Portal-Domain und E-Mail-Absender',
+    'wl.f3': 'Angepasste Login- und Report-Vorlagen',
+
+    // Multi-Tenant
+    'mt.tagline': 'Mehrere Mandanten strikt getrennt verwalten.',
+    'mt.intro':
+      'Verwalte mehrere Organisationen oder Kunden getrennt in einer Installation – mit eigenen Nutzern, Kampagnen und Auswertungen je Mandant.',
+    'mt.f1': 'Strikte Datentrennung pro Mandant',
+    'mt.f2': 'Mandanten-Administratoren mit eigenem Scope',
+    'mt.f3': 'Zentrale Verwaltung und Abrechnung',
+
+    // AI-Scoring
+    'ai.tagline': 'Risiko-Bewertung mit KI-Unterstützung.',
+    'ai.intro':
+      'Bewerte das Phishing-Risiko pro Empfänger und Kampagne automatisch und erkenne gefährdete Gruppen früher.',
+    'ai.f1': 'Risiko-Score je Empfänger und Abteilung',
+    'ai.f2': 'Automatische Erkennung auffälliger Muster',
+    'ai.f3': 'Empfehlungen für gezielte Trainings',
   },
   en: {
     // Navigation
@@ -889,5 +926,42 @@ export const translations: Record<Lang, Record<string, string>> = {
     'lpf.capturePw': 'Also capture passwords',
     'lpf.redirect': 'Redirect after submit (optional)',
     'lpf.create': 'Create landing page',
+
+    // Guidance panel (PageScaffold)
+    'guide.title': 'Guide',
+    'guide.variables': 'Variables',
+
+    // Enterprise placeholder
+    'ent.notActivated': 'This feature is part of the Enterprise package and is not activated in this installation.',
+
+    // Integrations overview
+    'io.subtitle': 'Connections to external systems — future integrations are configured here.',
+    'io.noneTitle': 'No integrations active yet.',
+    'io.noneBody':
+      'This area is prepared for future extensions — such as connections to ticketing, SIEM or chat systems. New integrations will then appear as their own entries in the left column, similar to the settings menu.',
+
+    // White-Label
+    'wl.tagline': 'The platform in your own brand.',
+    'wl.intro':
+      'Run HumanShield.APP under your own brand – logo, colors, sender domains and portal URL customized for your customers.',
+    'wl.f1': 'Custom logo, color scheme and favicon',
+    'wl.f2': 'Own portal domain and email sender',
+    'wl.f3': 'Customized login and report templates',
+
+    // Multi-Tenant
+    'mt.tagline': 'Manage multiple tenants strictly separated.',
+    'mt.intro':
+      'Manage several organizations or customers separately in one installation – with their own users, campaigns and analytics per tenant.',
+    'mt.f1': 'Strict data separation per tenant',
+    'mt.f2': 'Tenant administrators with their own scope',
+    'mt.f3': 'Central administration and billing',
+
+    // AI-Scoring
+    'ai.tagline': 'Risk scoring with AI support.',
+    'ai.intro':
+      'Automatically assess phishing risk per recipient and campaign and spot vulnerable groups earlier.',
+    'ai.f1': 'Risk score per recipient and department',
+    'ai.f2': 'Automatic detection of suspicious patterns',
+    'ai.f3': 'Recommendations for targeted training',
   },
 }
