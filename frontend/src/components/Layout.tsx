@@ -1,6 +1,5 @@
-import { ChevronDown, CircleUser, FileText, Globe, KeyRound, LayoutDashboard, LogOut, Mail, Moon, Network, Server, Settings, Sun, UserCog, Users } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { CircleUser, FileText, Globe, LayoutDashboard, LogOut, Mail, Moon, Server, Settings, Sun, UserCog, Users } from 'lucide-react'
+import { NavLink, Outlet } from 'react-router-dom'
 import { useMe } from '../hooks/useMe'
 import { useTheme } from '../hooks/useTheme'
 import { logout } from '../services/auth'
@@ -17,13 +16,11 @@ const mainNav = [
 // Fuer alle Nutzer sichtbar.
 const profileNav = [{ to: '/profile', label: 'Mein Profil', icon: CircleUser, end: false }]
 
-// Nur fuer Admins.
-const adminNav = [{ to: '/users', label: 'Benutzer', icon: UserCog, end: false }]
-
-// Untermenue "Einstellungen" — neue Bereiche hier ergaenzen.
-const settingsNav = [
-  { to: '/settings/ldap', label: 'LDAP', icon: Network, end: false },
-  { to: '/settings/oidc', label: 'OIDC / SSO', icon: KeyRound, end: false },
+// Nur fuer Admins. Die Einstellungsbereiche haben eine eigene zweite
+// Sidebar-Spalte (siehe SettingsLayout), Netbird-Stil.
+const adminNav = [
+  { to: '/users', label: 'Benutzer', icon: UserCog, end: false },
+  { to: '/settings', label: 'Einstellungen', icon: Settings, end: false },
 ]
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -46,54 +43,23 @@ function NavItems({ items }: { items: typeof mainNav }) {
   )
 }
 
-/** Aufklappbare Navigationsgruppe; oeffnet sich automatisch, wenn eine Unterseite aktiv ist. */
-function NavGroup({ label, base, items }: { label: string; base: string; items: typeof settingsNav }) {
-  const { pathname } = useLocation()
-  const childActive = pathname.startsWith(base)
-  const [open, setOpen] = useState(childActive)
-
-  useEffect(() => {
-    if (childActive) setOpen(true)
-  }, [childActive])
-
-  return (
-    <div>
-      <button
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors ${
-          childActive && !open
-            ? 'bg-accent/12 font-medium text-accent'
-            : 'text-text-secondary hover:bg-bg hover:text-text-primary'
-        }`}
-      >
-        <Settings size={16} />
-        {label}
-        <ChevronDown size={14} className={`ml-auto transition-transform ${open ? 'rotate-180' : ''}`} />
-      </button>
-      {open && (
-        <div className="mt-1 flex flex-col gap-1 border-l border-border pl-3 ml-5">
-          <NavItems items={items} />
-        </div>
-      )}
-    </div>
-  )
-}
-
 export default function Layout() {
   const { theme, toggleTheme } = useTheme()
   const me = useMe()
   const isAdmin = me?.role === 'admin'
 
   return (
-    <div className="flex min-h-screen bg-bg text-text-primary">
+    <div className="flex min-h-screen flex-col bg-bg text-text-primary">
+      {/* Kopfzeile mit durchgehender Trennlinie ueber die volle Breite (Netbird-Stil). */}
+      <header className="flex shrink-0 items-center gap-2 border-b border-border bg-surface px-4 py-3">
+        <span className="h-6 w-6 rounded-md bg-accent" aria-hidden />
+        <span className="text-lg font-semibold tracking-tight">PhishAware</span>
+      </header>
+
+      <div className="flex flex-1">
       <aside className="flex w-56 shrink-0 flex-col justify-between border-r border-border bg-surface">
         <div>
-          <div className="flex items-center gap-2 px-4 py-5">
-            <span className="h-6 w-6 rounded-md bg-accent" aria-hidden />
-            <span className="text-lg font-semibold tracking-tight">PhishAware</span>
-          </div>
-          <nav className="flex flex-col gap-1 px-3">
+          <nav className="flex flex-col gap-1 px-3 pt-4">
             <NavItems items={mainNav} />
           </nav>
         </div>
@@ -109,7 +75,6 @@ export default function Layout() {
               </div>
               <nav className="flex flex-col gap-1 px-3 pb-2">
                 <NavItems items={adminNav} />
-                <NavGroup label="Einstellungen" base="/settings" items={settingsNav} />
               </nav>
             </>
           )}
@@ -143,6 +108,7 @@ export default function Layout() {
       <main className="flex-1 p-6">
         <Outlet />
       </main>
+      </div>
     </div>
   )
 }
