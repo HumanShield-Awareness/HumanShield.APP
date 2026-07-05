@@ -4,6 +4,7 @@
 
 import { BookOpen, ChevronRight, type LucideIcon } from 'lucide-react'
 import { ReactNode } from 'react'
+import { useI18n } from '../i18n'
 import { pageGuidance } from './pageGuidance'
 
 interface BreadcrumbItem {
@@ -30,7 +31,8 @@ const helpCol = 'hidden w-96 shrink-0 border-l border-border xl:block'
  * Inhalt links und die nummerierten Anleitungs-Schritte rechts.
  */
 export default function PageScaffold({ title, subtitle, actions, breadcrumb, guidanceKey, children }: PageScaffoldProps) {
-  const guidance = guidanceKey ? pageGuidance[guidanceKey] : undefined
+  const { t, lang } = useI18n()
+  const guidance = guidanceKey ? pageGuidance[lang][guidanceKey] : undefined
 
   return (
     <div className="-m-6 flex min-h-full flex-col">
@@ -74,7 +76,7 @@ export default function PageScaffold({ title, subtitle, actions, breadcrumb, gui
           <aside className={`${helpCol} px-6 py-6`}>
             <div className="flex items-center gap-2 text-sm font-medium">
               <BookOpen size={15} />
-              Anleitung
+              {t('guide.title')}
             </div>
             <p className="mt-2 text-sm text-text-secondary">{guidance.intro}</p>
             <ol className="mt-4 flex flex-col gap-3">
@@ -89,7 +91,7 @@ export default function PageScaffold({ title, subtitle, actions, breadcrumb, gui
             </ol>
             {guidance.variables && (
               <div className="mt-5">
-                <div className="text-xs font-medium uppercase tracking-wider text-text-secondary">Variablen</div>
+                <div className="text-xs font-medium uppercase tracking-wider text-text-secondary">{t('guide.variables')}</div>
                 <ul className="mt-2 flex flex-col gap-1.5">
                   {guidance.variables.map((v) => (
                     <li key={v.name} className="text-sm text-text-secondary">

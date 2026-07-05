@@ -2,8 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-// Zentrale Anleitungstexte fuer den Hilfe-Bereich rechts (PageScaffold).
-// Key = guidanceKey der jeweiligen Seite. Neue Seite -> hier ergaenzen.
+// Zentrale Anleitungstexte fuer den Hilfe-Bereich rechts (PageScaffold),
+// zweisprachig (DE/EN). Key = guidanceKey der jeweiligen Seite.
+import type { Lang } from '../i18n/translations'
 
 export interface Guidance {
   intro: string
@@ -12,7 +13,7 @@ export interface Guidance {
   variables?: { name: string; desc: string }[]
 }
 
-export const pageGuidance: Record<string, Guidance> = {
+const de: Record<string, Guidance> = {
   'template-editor': {
     intro:
       'So baust du eine Vorlage auf. Betreff, HTML- und Text-Inhalt können Platzhalter enthalten, die pro Empfänger automatisch ersetzt werden.',
@@ -181,3 +182,175 @@ export const pageGuidance: Record<string, Guidance> = {
     note: 'Bei einer frischen Installation ist diese Seite mit den SMTP-Werten aus der .env vorbefüllt.',
   },
 }
+
+const en: Record<string, Guidance> = {
+  'template-editor': {
+    intro:
+      'How to build a template. Subject, HTML and text content can contain placeholders that are replaced automatically per recipient.',
+    steps: [
+      'Give it a name and a realistic subject — the subject often decides whether the mail gets opened.',
+      'Design the HTML content and add the tracking link via {{ link }} — only then are clicks attributed to the landing page.',
+      'Personalize with variables (e.g. {{ first_name }}); this makes the mail more credible.',
+      'Optionally add a text part as a plain-text alternative.',
+      'Use “Preview (with sample data)” to check how the mail looks to the recipient.',
+    ],
+    variables: [
+      { name: '{{ first_name }}', desc: 'Recipient’s first name' },
+      { name: '{{ last_name }}', desc: 'Recipient’s last name' },
+      { name: '{{ email }}', desc: 'Recipient’s email address' },
+      { name: '{{ link }}', desc: 'Personalized tracking link to the landing page' },
+    ],
+    note: 'Equivalent aliases: {{ recipient_name }}, {{ recipient_email }}, {{ click_link }}.',
+  },
+  templates: {
+    intro:
+      'Templates are the phishing emails sent in campaigns. Subject and content can contain placeholders such as the first name or the tracking link.',
+    steps: [
+      'Choose a meaningful name and a realistic subject — it often decides whether the mail gets opened.',
+      'Design the HTML content and make it more credible with personalization variables (e.g. first name).',
+      'Add the tracking link/placeholder so clicks are attributed to the landing page.',
+      'Optionally add a text part so the mail arrives cleanly even without HTML.',
+      'Use the preview to check how the mail looks to the recipient.',
+    ],
+    note: 'Templates can be reused across multiple campaigns.',
+  },
+  groups: {
+    intro:
+      'Groups are reusable recipient lists for your campaigns. You can add recipients manually, via CSV or from the LDAP directory.',
+    steps: [
+      'Create a new group and give it a descriptive name (e.g. “Sales department”).',
+      'Enter recipients manually or import them via CSV (email, first name, last name).',
+      'Alternatively use “LDAP import” — this requires LDAP to be configured under Settings.',
+      'Before sending, check that all email addresses are correct.',
+    ],
+    note: 'A group can be used in several campaigns at the same time.',
+  },
+  'sending-profiles': {
+    intro:
+      'A sending profile bundles SMTP credentials and sender identity for campaign delivery. Without a profile the global fallback SMTP is used.',
+    steps: [
+      'Enter the provider’s SMTP host and port and choose the matching TLS mode.',
+      'Enter username and password — the password is stored encrypted.',
+      'Set the sender address and name; the address must be authorized to send at the provider (SPF/DKIM).',
+      'Use “Test email” to a mailbox of your own to check delivery before running a campaign.',
+    ],
+    note: 'You can create a separate profile for each sender identity.',
+  },
+  'landing-editor': {
+    intro:
+      'Landing pages are the pages recipients land on after clicking. Optionally they capture form input to create an awareness moment.',
+    steps: [
+      'Give it a name and design the page content — as HTML or in markdown mode (e.g. a cloned login page).',
+      'For an input form use HTML; all forms are automatically rewritten to the tracking URL on delivery.',
+      'Enable “data capture” if submitted form data should be recorded as a signal.',
+      'Only capture passwords if truly necessary — mind data protection and internal policies.',
+      'Optionally add a redirect or awareness page after submission.',
+    ],
+    note: 'Captured data is for training purposes only; clarify admissibility internally beforehand.',
+  },
+  'landing-pages': {
+    intro:
+      'Landing pages are the pages recipients land on after a click. They can optionally capture input to create awareness moments.',
+    steps: [
+      'Give it a name and design the page’s HTML content (e.g. a cloned login page).',
+      'If needed, enable “data capture” to record submitted form data.',
+      'Only capture passwords if truly necessary — mind data protection and internal policies.',
+      'Optionally add an awareness/redirect page after submission.',
+    ],
+    note: 'Captured data is for training purposes only; clarify admissibility internally beforehand.',
+  },
+  'campaign-editor': {
+    intro:
+      'A campaign bundles template, sender, landing page and recipient groups. Delivery is then started separately via “Send”.',
+    steps: [
+      'Give it a name and select the email template (required) — it must be created under “Templates” first.',
+      'Choose a sending profile for the sender identity; without a selection the global fallback SMTP is used.',
+      'Optionally add a landing page recipients land on after clicking.',
+      'Select one or more recipient groups (create or import them under “Groups”).',
+      'Optionally set a date and time for a scheduled start.',
+      'Create the campaign and then start it from the overview via “Send” — afterwards evaluate the results.',
+    ],
+    note: 'When in doubt, start with a small test group.',
+  },
+  campaigns: {
+    intro:
+      'In a campaign you combine template, sending profile, landing page and recipient group and start delivery.',
+    steps: [
+      'First make sure template, group and (optionally) landing page are created.',
+      'Create a new campaign and select the building blocks in the wizard.',
+      'Set the sender via a sending profile — otherwise the global fallback SMTP is used.',
+      'Save the campaign and then start delivery via “Send”.',
+      'After sending, evaluate the results (opens, clicks, input).',
+    ],
+    note: 'When in doubt, start with a small test group.',
+  },
+  results: {
+    intro:
+      'The results show per recipient how they reacted to the campaign — from delivery through open to click and input.',
+    steps: [
+      'The metrics at the top give an overview of the whole campaign.',
+      'In the table, follow each recipient’s status.',
+      'Use “Export as CSV” to download the raw data for reports.',
+    ],
+    note: 'Use the results for targeted awareness measures, not to penalize individuals.',
+  },
+  users: {
+    intro:
+      'Here you manage the local accounts for accessing HumanShield.APP. The local login is the primary sign-in method.',
+    steps: [
+      'Open “New user” and set email, name, initial password and role.',
+      'Choose the role: “Admin” may manage settings and users, “User” only campaign features.',
+      'If needed, deactivate accounts instead of deleting them to temporarily block access.',
+    ],
+    note: 'With OIDC active, users must still exist as local accounts with a matching email.',
+  },
+  profile: {
+    intro: 'Here you change your displayed name and your password.',
+    steps: [
+      'Adjust the name and save.',
+      'To change the password, enter the current password and the new one twice.',
+      'Use a strong, unique password.',
+    ],
+    note: 'Your email address and role can only be changed by an admin.',
+  },
+  'settings-ldap': {
+    intro:
+      'Via LDAP you import email recipients directly from your directory service (e.g. Active Directory or OpenLDAP) into groups.',
+    steps: [
+      'Enter host and port of the LDAP server (default: 389, LDAPS: 636).',
+      'Choose encryption: LDAPS (SSL) or StartTLS — recommended for production.',
+      'Provide the bind DN of a service account with read access, e.g. cn=svc,ou=service,dc=example,dc=com.',
+      'Enter the bind password — it is stored encrypted and never shown again.',
+      'Set the base DN below which users are searched, e.g. ou=users,dc=example,dc=com.',
+      'If needed, adjust the user filter and attribute mapping (AD: email usually “mail”, first name “givenName”, last name “sn”).',
+      'Click “Test connection” — it saves the values and checks connection and login.',
+    ],
+    note: 'The import itself then happens under Groups → “LDAP import”.',
+  },
+  'settings-oidc': {
+    intro:
+      'OIDC is an optional second sign-in via single sign-on. The local login remains the primary method — the app runs fully without OIDC.',
+    steps: [
+      'In your identity provider (Authentik, Keycloak, Entra ID, Okta, …) create a new OIDC application.',
+      'Set the callback address as redirect URI: https://<your-domain>/api/auth/callback.',
+      'Copy the issuer URL from the IdP (base URL of the OIDC discovery).',
+      'Enter client ID and client secret — the secret is stored encrypted.',
+      'Save and then toggle “Enable OIDC”: the SSO button appears on the sign-in page.',
+    ],
+    note: 'Users must exist as local accounts with a matching email so the SSO sign-in can be matched.',
+  },
+  'settings-smtp': {
+    intro:
+      'The global fallback SMTP is only used when a campaign has no dedicated sending profile. For custom sender identities, better create a sending profile.',
+    steps: [
+      'Enter host and port of your SMTP provider (works with any provider: IONOS, Hetzner, Mailgun, your own server, …).',
+      'Choose the TLS mode matching the port: STARTTLS for port 587, SSL/TLS for port 465, unencrypted only for port 25 on an internal network.',
+      'Enter the mailbox’s username and password — the password is stored encrypted.',
+      'Set the sender address and name; the address must be authorized to send at the provider (mind SPF/DKIM).',
+      'Click “Test connection” — it saves the values and checks connection and login.',
+    ],
+    note: 'On a fresh installation this page is pre-filled with the SMTP values from .env.',
+  },
+}
+
+export const pageGuidance: Record<Lang, Record<string, Guidance>> = { de, en }

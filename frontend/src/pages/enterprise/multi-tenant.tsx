@@ -4,23 +4,21 @@
 
 import { Blocks, Building2 } from 'lucide-react'
 import EnterprisePlaceholder from '../../components/EnterprisePlaceholder'
+import { useI18n } from '../../i18n'
 
 export default function MultiTenantPage() {
+  const { t } = useI18n()
   return (
     <EnterprisePlaceholder
-      title="Multi-Tenant"
+      title={t('integrations.multiTenant')}
       icon={Building2}
       breadcrumb={[
-        { label: 'Integrationen', icon: Blocks },
-        { label: 'Multi-Tenant', icon: Building2 },
+        { label: t('nav.integrations'), icon: Blocks },
+        { label: t('integrations.multiTenant'), icon: Building2 },
       ]}
-      tagline="Mehrere Mandanten strikt getrennt verwalten."
-      intro="Verwalte mehrere Organisationen oder Kunden getrennt in einer Installation – mit eigenen Nutzern, Kampagnen und Auswertungen je Mandant."
-      features={[
-        'Strikte Datentrennung pro Mandant',
-        'Mandanten-Administratoren mit eigenem Scope',
-        'Zentrale Verwaltung und Abrechnung',
-      ]}
+      tagline={t('mt.tagline')}
+      intro={t('mt.intro')}
+      features={[t('mt.f1'), t('mt.f2'), t('mt.f3')]}
     />
   )
 }

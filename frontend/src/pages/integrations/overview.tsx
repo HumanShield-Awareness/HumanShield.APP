@@ -4,24 +4,22 @@
 
 import { Blocks, LayoutGrid } from 'lucide-react'
 import PageScaffold from '../../components/PageScaffold'
+import { useI18n } from '../../i18n'
 
 export default function IntegrationsOverviewPage() {
+  const { t } = useI18n()
   return (
     <PageScaffold
-      title="Integrationen"
-      subtitle="Verbindungen zu externen Systemen — hier werden künftige Integrationen konfiguriert."
+      title={t('nav.integrations')}
+      subtitle={t('io.subtitle')}
       breadcrumb={[
-        { label: 'Integrationen', icon: Blocks },
-        { label: 'Übersicht', icon: LayoutGrid },
+        { label: t('nav.integrations'), icon: Blocks },
+        { label: t('integrations.overview'), icon: LayoutGrid },
       ]}
     >
       <div className="w-fit max-w-full rounded-lg border border-dashed border-border bg-surface p-6 text-sm text-text-secondary">
-        <p className="font-medium text-text-primary">Noch keine Integrationen aktiv.</p>
-        <p className="mt-2 max-w-md">
-          Dieser Bereich ist für spätere Erweiterungen vorbereitet — etwa die Anbindung an
-          Ticketing-, SIEM- oder Chat-Systeme. Neue Integrationen erscheinen dann als eigene
-          Punkte in der linken Spalte, analog zum Einstellungen-Menü.
-        </p>
+        <p className="font-medium text-text-primary">{t('io.noneTitle')}</p>
+        <p className="mt-2 max-w-md">{t('io.noneBody')}</p>
       </div>
     </PageScaffold>
   )
