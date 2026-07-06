@@ -91,13 +91,25 @@ const levelText: Record<string, string> = {
   low: 'text-status-success',
 }
 
+interface Progress {
+  email: string
+  campaigns: number
+  first_risk: number
+  last_risk: number
+  avg_risk: number
+  trend: number
+  cert_status: string
+}
+
 export default function ReportsPage() {
   const { t } = useI18n()
   const features = useFeatures()
   const businessLicensed = Boolean(features?.features?.business)
+  const enterpriseLicensed = Boolean(features?.features?.enterprise)
   const [report, setReport] = useState<Report | null>(null)
   const [trend, setTrend] = useState<TrendRow[]>([])
   const [users, setUsers] = useState<UserRow[]>([])
+  const [progress, setProgress] = useState<Progress[]>([])
   const [loading, setLoading] = useState(true)
   const [exporting, setExporting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -115,6 +127,12 @@ export default function ReportsPage() {
     api.get<TrendRow[]>('/reports/trend').then((r) => setTrend(r.data)).catch(() => setTrend([]))
     api.get<UserRow[]>('/reports/users').then((r) => setUsers(r.data)).catch(() => setUsers([]))
   }, [businessLicensed])
+
+  useEffect(() => {
+    // Enterprise-Reporting (Schulungsfortschritt, Zertifikatsstatus) — nur mit Enterprise-Lizenz.
+    if (!enterpriseLicensed) return
+    api.get<Progress[]>('/enterprise-reports/users').then((r) => setProgress(r.data)).catch(() => setProgress([]))
+  }, [enterpriseLicensed])
 
   async function exportCsv() {
     setExporting(true)
@@ -416,6 +434,57 @@ export default function ReportsPage() {
           ))}
         </div>
       </div>
+
+      {/* Enterprise: Schulungsfortschritt & Zertifikatsstatus */}
+      {enterpriseLicensed && (
+        <div className="mt-8">
+          <h2 className="mb-3 text-lg font-semibold">
+            {t('rep.progress.heading')}
+            <span className="ml-2 rounded-full bg-blue-600 px-1.5 py-0.5 align-middle text-[10px] font-semibold uppercase tracking-wide text-white">
+              {t('badge.enterprise')}
+            </span>
+          </h2>
+          {progress.length === 0 ? (
+            <p className="text-text-secondary">{t('rep.progress.empty')}</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse text-sm">
+                <thead>
+                  <tr className="border-b border-border text-left text-text-secondary">
+                    <th className="py-2 pr-4 font-medium">{t('rep.progress.user')}</th>
+                    <th className="py-2 pr-4 font-medium">{t('rep.progress.campaigns')}</th>
+                    <th className="py-2 pr-4 font-medium">{t('rep.progress.risk')}</th>
+                    <th className="py-2 pr-4 font-medium">{t('rep.progress.status')}</th>
+                    <th className="py-2 font-medium" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {progress.map((p) => (
+                    <tr key={p.email} className="border-b border-border">
+                      <td className="py-2 pr-4">{p.email}</td>
+                      <td className="py-2 pr-4 font-mono tabular-nums text-text-secondary">{p.campaigns}</td>
+                      <td className="py-2 pr-4 font-mono tabular-nums text-text-secondary">{p.first_risk} → {p.last_risk}</td>
+                      <td className="py-2 pr-4">
+                        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${p.cert_status === 'passed' ? 'bg-green-600/15 text-green-700 dark:text-green-400' : 'bg-status-danger/15 text-status-danger'}`}>
+                          {t(`rep.progress.${p.cert_status}`)}
+                        </span>
+                      </td>
+                      <td className="py-2 text-right whitespace-nowrap">
+                        <button onClick={() => downloadBlob(`/enterprise-reports/user/${encodeURIComponent(p.email)}/pdf`, 'bericht.pdf')} className="mr-3 text-accent hover:underline">
+                          {t('rep.progress.report')}
+                        </button>
+                        <button onClick={() => downloadBlob(`/enterprise-reports/user/${encodeURIComponent(p.email)}/certificate/pdf`, 'zertifikat.pdf')} className="text-accent hover:underline">
+                          {t('rep.progress.cert')}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
     </PageScaffold>
   )
 }
