@@ -53,7 +53,7 @@ export default function AddonPage({ tier, title, icon: Icon, tagline, intro, gro
               {t(style.labelKey)}
             </span>
           ) : (
-            <TierBadge tier={tier} className="px-2 py-0.5 text-xs" />
+            <TierBadge tier={tier} locked={!active} className="px-2 py-0.5 text-xs" />
           )}
           <span
             className={`ml-auto rounded-full px-2 py-0.5 text-xs font-semibold ${

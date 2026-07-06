@@ -258,7 +258,7 @@ export default function ReportsPage() {
           >
             <FileText size={15} />
             {t('rep.exportPdf')}
-            <TierBadge tier="business" />
+            <TierBadge tier="business" locked={!businessLicensed} />
             {!businessLicensed && <Lock size={13} className="text-text-secondary" />}
           </button>
           <button
@@ -268,7 +268,7 @@ export default function ReportsPage() {
           >
             <FileText size={15} />
             {t('rep.exportExec')}
-            <TierBadge tier="business" />
+            <TierBadge tier="business" locked={!businessLicensed} />
             {!businessLicensed && <Lock size={13} className="text-text-secondary" />}
           </button>
         </div>
@@ -377,7 +377,7 @@ export default function ReportsPage() {
         <div className="mt-8">
           <h2 className="mb-3 text-lg font-semibold">
             {t('rep.trend.heading')}
-            <TierBadge tier="business" className="ml-2 align-middle" />
+            <TierBadge tier="business" locked={!businessLicensed} className="ml-2 align-middle" />
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -411,7 +411,7 @@ export default function ReportsPage() {
         <div className="mt-8">
           <h2 className="mb-3 text-lg font-semibold">
             {t('rep.users.heading')}
-            <TierBadge tier="business" className="ml-2 align-middle" />
+            <TierBadge tier="business" locked={!businessLicensed} className="ml-2 align-middle" />
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -446,7 +446,7 @@ export default function ReportsPage() {
         <div className="mt-8">
           <h2 className="mb-3 text-lg font-semibold">
             {t('rep.dept.heading')}
-            <TierBadge tier="business" className="ml-2 align-middle" />
+            <TierBadge tier="business" locked={!businessLicensed} className="ml-2 align-middle" />
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -518,7 +518,7 @@ export default function ReportsPage() {
       <div className="mt-8">
         <h2 className="mb-3 text-lg font-semibold">
           {t('rep.evidence.heading')}
-          <TierBadge tier="business" className="ml-2 align-middle" />
+          <TierBadge tier="business" locked={!businessLicensed} className="ml-2 align-middle" />
         </h2>
         <div className="flex flex-wrap gap-2">
           {(['dsgvo', 'nis2', 'iso27001', 'awareness', 'audit', 'certificate', 'training'] as const).map((kind) => (
@@ -541,7 +541,7 @@ export default function ReportsPage() {
         <div className="mt-8">
           <h2 className="mb-3 text-lg font-semibold">
             {t('rep.progress.heading')}
-            <TierBadge tier="enterprise" className="ml-2 align-middle" />
+            <TierBadge tier="enterprise" locked={!enterpriseLicensed} className="ml-2 align-middle" />
           </h2>
           {progress.length === 0 ? (
             <p className="text-text-secondary">{t('rep.progress.empty')}</p>

@@ -49,10 +49,10 @@ export default function IntegrationsLayout() {
               <NavLink key={to} to={to} className={linkClass}>
                 <Icon size={16} className="shrink-0" />
                 <span className="truncate">{t(labelKey)}</span>
-                {feature && (
+                {feature && !active && (
                   <span className="ml-auto flex shrink-0 items-center gap-1">
                     <TierBadge tier={feature} />
-                    {!active && <Lock size={13} className="text-text-secondary" />}
+                    <Lock size={13} className="text-text-secondary" />
                   </span>
                 )}
               </NavLink>

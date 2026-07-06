@@ -168,7 +168,7 @@ export default function TemplateForm({ initial, isEdit, onSubmit, onCancel, subm
             >
               <QrCode size={13} />
               {t('tf.qr')}
-              <TierBadge tier="business" />
+              <TierBadge tier="business" locked={!businessLicensed} />
               {!businessLicensed && <Lock size={11} className="text-text-secondary" />}
             </button>
             <div className="flex gap-0.5 rounded-md border border-border p-0.5 text-xs">

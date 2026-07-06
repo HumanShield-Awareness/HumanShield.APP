@@ -130,7 +130,7 @@ export default function ResultsPage() {
         >
           <FileText size={14} />
           {t('res.exportPdf')}
-          <TierBadge tier="business" className="no-underline" />
+          <TierBadge tier="business" locked={!businessLicensed} className="no-underline" />
           {!businessLicensed && <Lock size={13} className="text-text-secondary" />}
         </button>
       </div>

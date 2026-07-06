@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import LanguageSwitcher from './LanguageSwitcher'
 import { useI18n } from '../i18n'
+import { useFeatures } from '../hooks/useFeatures'
 import { useMe } from '../hooks/useMe'
 import { useTheme } from '../hooks/useTheme'
 import { useBranding } from './BrandingProvider'
@@ -62,11 +63,13 @@ const linkClass = ({ isActive }: { isActive: boolean }) =>
 
 function NavEntry({ to, labelKey, icon: Icon, end, tier }: NavItem) {
   const { t } = useI18n()
+  const features = useFeatures()
+  const locked = tier ? !features?.features?.[tier] : false
   return (
     <NavLink to={to} end={end} className={linkClass}>
       <Icon size={16} className="shrink-0" />
       <span className="truncate">{t(labelKey)}</span>
-      {tier && <TierBadge tier={tier} className="ml-auto shrink-0" />}
+      {tier && <TierBadge tier={tier} locked={locked} className="ml-auto shrink-0" />}
     </NavLink>
   )
 }

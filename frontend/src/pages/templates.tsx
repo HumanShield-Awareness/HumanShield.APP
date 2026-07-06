@@ -214,7 +214,7 @@ export default function TemplatesPage() {
           >
             <BookOpen size={15} />
             {t('tpl.library')}
-            <TierBadge tier="business" />
+            <TierBadge tier="business" locked={!businessLicensed} />
             {!businessLicensed && <Lock size={13} className="text-text-secondary" />}
           </button>
           <button
@@ -228,7 +228,7 @@ export default function TemplatesPage() {
             className="flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm text-text-primary hover:bg-bg"
           >
             {t('tpl.upload')}
-            <TierBadge tier="business" />
+            <TierBadge tier="business" locked={!businessLicensed} />
             {!businessLicensed && <Lock size={13} className="text-text-secondary" />}
           </button>
           <button
