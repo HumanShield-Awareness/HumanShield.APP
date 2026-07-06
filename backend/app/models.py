@@ -241,6 +241,8 @@ class TrackingEvent(Base):
     # Clientseitig per Landing-Page-Beacon nachgetragen (JavaScript).
     screen_resolution: Mapped[str | None] = mapped_column(String(16), nullable=True)
     client_language: Mapped[str | None] = mapped_column(String(16), nullable=True)
+    # Leichtgewichtiger Client-Fingerprint (Hash aus stabilen Browser-Merkmalen).
+    fingerprint: Mapped[str | None] = mapped_column(String(32), nullable=True)
 
     recipient: Mapped["Recipient"] = relationship(back_populates="tracking_events")
 

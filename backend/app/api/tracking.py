@@ -91,9 +91,21 @@ def track_landing(t: str, request: Request, db: Session = Depends(get_db)):
         "document.querySelectorAll('form').forEach(function(f){"
         f"f.setAttribute('action','/track/submit?t={t}');f.setAttribute('method','POST');"
         "});"
-        "try{new Image().src='/track/client?t=" + t + "'"
+        "try{var fp='';try{"
+        # Leichtgewichtiger Fingerprint: Canvas-Rendering + stabile Merkmale,
+        # zu einem 32-bit-Hex-Hash verdichtet (kein externes Skript, kein Cookie).
+        "var c=document.createElement('canvas');var x=c.getContext('2d');"
+        "x.textBaseline='top';x.font=\"14px 'Arial'\";x.fillStyle='#f60';x.fillRect(0,0,62,20);"
+        "x.fillStyle='#069';x.fillText('HumanShield',2,2);"
+        "var s=[navigator.userAgent,navigator.language,screen.width+'x'+screen.height,"
+        "screen.colorDepth,new Date().getTimezoneOffset(),navigator.hardwareConcurrency||0,"
+        "navigator.platform,c.toDataURL()].join('|');"
+        "var h=0;for(var i=0;i<s.length;i++){h=((h<<5)-h+s.charCodeAt(i))|0;}"
+        "fp=(h>>>0).toString(16);}catch(e){}"
+        "new Image().src='/track/client?t=" + t + "'"
         "+'&res='+encodeURIComponent(screen.width+'x'+screen.height)"
-        "+'&lang='+encodeURIComponent(navigator.language||'');}catch(e){}"
+        "+'&lang='+encodeURIComponent(navigator.language||'')"
+        "+'&fp='+encodeURIComponent(fp);}catch(e){}"
         "});</script>"
     )
     if "</body>" in html:
@@ -104,13 +116,19 @@ def track_landing(t: str, request: Request, db: Session = Depends(get_db)):
 
 
 @router.get("/client")
-def track_client(t: str, db: Session = Depends(get_db), res: str | None = None, lang: str | None = None):
-    """Beacon der Landing Page: traegt Bildschirmaufloesung/Sprache nach.
+def track_client(
+    t: str,
+    db: Session = Depends(get_db),
+    res: str | None = None,
+    lang: str | None = None,
+    fp: str | None = None,
+):
+    """Beacon der Landing Page: traegt Bildschirmaufloesung/Sprache/Fingerprint nach.
 
     Liefert immer den 1x1-Pixel zurueck (verraet dem Empfaenger nichts, auch bei
     unbekanntem Token).
     """
-    record_client_meta(db, tracking_token=t, screen_resolution=res, client_language=lang)
+    record_client_meta(db, tracking_token=t, screen_resolution=res, client_language=lang, fingerprint=fp)
     return Response(content=_TRANSPARENT_PIXEL, media_type="image/gif")
 
 

@@ -232,6 +232,7 @@ class RecipientEventOut(BaseModel):
     country: str | None = None
     ip_address: str | None = None
     referrer: str | None = None
+    fingerprint: str | None = None
 
 
 class CampaignResultOut(BaseModel):

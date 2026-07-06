@@ -60,6 +60,7 @@ def recipient_events(
             country=e.country,
             ip_address=e.ip_address,
             referrer=e.referrer,
+            fingerprint=e.fingerprint,
         )
         for e in events
     ]
