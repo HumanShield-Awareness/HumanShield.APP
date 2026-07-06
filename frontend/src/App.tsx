@@ -20,6 +20,7 @@ import GroupsPage from './pages/groups'
 import DashboardPage from './pages/index'
 import LandingPagesPage from './pages/landing-pages'
 import LoginPage from './pages/login'
+import AutoCampaignsPage from './pages/auto-campaigns'
 import MultiStagePage from './pages/multistage'
 import ProfilePage from './pages/profile'
 import RecurringPage from './pages/recurring'
@@ -69,6 +70,7 @@ export default function App() {
           <Route path="/campaigns" element={<CampaignsPage />} />
           <Route path="/recurring" element={<RecurringPage />} />
           <Route path="/multistage" element={<MultiStagePage />} />
+          <Route path="/auto-campaigns" element={<AutoCampaignsPage />} />
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/users" element={<UsersPage />} />
           <Route path="/profile" element={<ProfilePage />} />
