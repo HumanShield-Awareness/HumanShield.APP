@@ -114,6 +114,7 @@ Der **Kern** von HumanShield.APP (alle oben genannten Funktionen) ist unter der 
 **Enterprise-Add-on** (enthält alle Business-Funktionen)
 - **White-Label** — eigenes Branding (App-Name, Akzentfarben, Logo)
 - **Automatische/Risiko-Kampagnen** — Empfänger werden automatisch nach Risiko gewählt und in festem Intervall versendet
+- **Enterprise-Reporting** — Schulungsfortschritt, Zertifikatsstatus und individuelle Berichte je Person (PDF)
 - geplant: Multi-Tenant, SAML-SSO, AI-Scoring, SIEM-Export u. a.
 
 Ohne Lizenz läuft die Plattform als reiner Open-Core-Betrieb — ohne Fehler, ohne Sperren.
