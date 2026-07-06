@@ -85,6 +85,18 @@ interface UserRow {
   risk_level: 'high' | 'medium' | 'low'
 }
 
+interface DepartmentRow {
+  department: string
+  recipients: number
+  clicked: number
+  submitted: number
+  click_rate: number
+  submit_rate: number
+  high_criticality: number
+  risk_score: number
+  risk_level: 'high' | 'medium' | 'low'
+}
+
 const levelText: Record<string, string> = {
   high: 'text-status-danger',
   medium: 'text-status-warning',
@@ -109,6 +121,7 @@ export default function ReportsPage() {
   const [report, setReport] = useState<Report | null>(null)
   const [trend, setTrend] = useState<TrendRow[]>([])
   const [users, setUsers] = useState<UserRow[]>([])
+  const [departments, setDepartments] = useState<DepartmentRow[]>([])
   const [progress, setProgress] = useState<Progress[]>([])
   const [loading, setLoading] = useState(true)
   const [exporting, setExporting] = useState(false)
@@ -126,6 +139,7 @@ export default function ReportsPage() {
     if (!businessLicensed) return
     api.get<TrendRow[]>('/reports/trend').then((r) => setTrend(r.data)).catch(() => setTrend([]))
     api.get<UserRow[]>('/reports/users').then((r) => setUsers(r.data)).catch(() => setUsers([]))
+    api.get<DepartmentRow[]>('/reports/departments').then((r) => setDepartments(r.data)).catch(() => setDepartments([]))
   }, [businessLicensed])
 
   useEffect(() => {
@@ -403,6 +417,45 @@ export default function ReportsPage() {
                     <td className="py-2 pr-4 font-mono tabular-nums">{u.submitted}</td>
                     <td className={`py-2 font-mono font-semibold tabular-nums ${levelText[u.risk_level]}`}>
                       {u.risk_score} · {t(`risk.level.${u.risk_level}`)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+      {/* Business: Abteilungsvergleich */}
+      {departments.length > 0 && (
+        <div className="mt-8">
+          <h2 className="mb-3 text-lg font-semibold">
+            {t('rep.dept.heading')}
+            <span className="ml-2 rounded-full bg-green-600 px-1.5 py-0.5 align-middle text-[10px] font-semibold uppercase tracking-wide text-white">
+              {t('badge.business')}
+            </span>
+          </h2>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-border text-left text-text-secondary">
+                  <th className="py-2 pr-4 font-medium">{t('rep.dept.department')}</th>
+                  <th className="py-2 pr-4 font-medium">{t('common.recipients')}</th>
+                  <th className="py-2 pr-4 font-medium">{t('rep.col.clickRate')}</th>
+                  <th className="py-2 pr-4 font-medium">{t('rep.col.submitRate')}</th>
+                  <th className="py-2 pr-4 font-medium">{t('rep.dept.critical')}</th>
+                  <th className="py-2 font-medium">{t('rep.col.risk')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {departments.map((d) => (
+                  <tr key={d.department} className="border-b border-border">
+                    <td className="py-2 pr-4">{d.department}</td>
+                    <td className="py-2 pr-4 font-mono tabular-nums">{d.recipients}</td>
+                    <td className="py-2 pr-4 font-mono tabular-nums">{d.click_rate}%</td>
+                    <td className="py-2 pr-4 font-mono tabular-nums">{d.submit_rate}%</td>
+                    <td className="py-2 pr-4 font-mono tabular-nums">{d.high_criticality}</td>
+                    <td className={`py-2 font-mono font-semibold tabular-nums ${levelText[d.risk_level]}`}>
+                      {d.risk_score} · {t(`risk.level.${d.risk_level}`)}
                     </td>
                   </tr>
                 ))}
