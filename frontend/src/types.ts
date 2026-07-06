@@ -63,6 +63,7 @@ export interface RecipientEvent {
   country: string | null
   ip_address: string | null
   referrer: string | null
+  fingerprint: string | null
 }
 
 export interface CampaignResult {

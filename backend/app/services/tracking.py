@@ -27,6 +27,8 @@ _submission_handlers: list[Callable[[Recipient, dict], None]] = []
 
 # Erlaubtes Format der clientseitigen Aufloesung, z. B. "1920x1080".
 _VALID_RESOLUTION = re.compile(r"^\d{2,5}x\d{2,5}$")
+# Fingerprint ist ein Hex-Hash (vom Client erzeugt); nur Hex, max. 32 Zeichen.
+_VALID_FINGERPRINT = re.compile(r"^[0-9a-f]{1,32}$")
 
 
 def register_event_listener(listener: Callable[[TrackingEvent, Recipient], None]) -> None:
@@ -103,14 +105,16 @@ def record_client_meta(
     tracking_token: str,
     screen_resolution: str | None = None,
     client_language: str | None = None,
+    fingerprint: str | None = None,
 ) -> bool:
     """Traegt clientseitig erfasste Metadaten am juengsten Klick-Event nach.
 
-    Wird vom Landing-Page-Beacon aufgerufen (Bildschirmaufloesung/Sprache stehen
-    nur im Browser zur Verfuegung). Aktualisiert nur leere Felder und nur, wenn
-    der Token bekannt ist. Gibt zurueck, ob ein Event aktualisiert wurde.
+    Wird vom Landing-Page-Beacon aufgerufen (Bildschirmaufloesung/Sprache/
+    Fingerprint stehen nur im Browser zur Verfuegung). Aktualisiert nur leere
+    Felder und nur, wenn der Token bekannt ist. Gibt zurueck, ob ein Event
+    aktualisiert wurde.
     """
-    if not screen_resolution and not client_language:
+    if not screen_resolution and not client_language and not fingerprint:
         return False
     recipient = db.query(Recipient).filter(Recipient.tracking_token == tracking_token).first()
     if recipient is None:
@@ -133,6 +137,8 @@ def record_client_meta(
         event.screen_resolution = screen_resolution
     if client_language and not event.client_language:
         event.client_language = client_language[:16]
+    if fingerprint and _VALID_FINGERPRINT.match(fingerprint) and not event.fingerprint:
+        event.fingerprint = fingerprint
     db.commit()
     return True
 

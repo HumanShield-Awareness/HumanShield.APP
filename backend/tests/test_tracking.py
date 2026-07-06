@@ -211,6 +211,30 @@ def test_client_beacon_enriches_latest_click(client, db, campaign_with_recipient
     assert click.client_language == "de-DE"
 
 
+def test_client_beacon_stores_fingerprint(client, db, campaign_with_recipient):
+    """Der Beacon traegt einen gueltigen Hex-Fingerprint am Klick-Event nach."""
+    client.get("/track/landing", params={"t": "tok-known-123"})
+    client.get("/track/client", params={"t": "tok-known-123", "fp": "1a2b3c4d"})
+    click = (
+        db.query(TrackingEvent)
+        .filter(TrackingEvent.event_type == TrackingEventType.CLICKED)
+        .one()
+    )
+    assert click.fingerprint == "1a2b3c4d"
+
+
+def test_client_beacon_rejects_bogus_fingerprint(client, db, campaign_with_recipient):
+    """Nicht-Hex-Fingerprints (Manipulationsversuch) werden verworfen."""
+    client.get("/track/landing", params={"t": "tok-known-123"})
+    client.get("/track/client", params={"t": "tok-known-123", "fp": "<script>"})
+    click = (
+        db.query(TrackingEvent)
+        .filter(TrackingEvent.event_type == TrackingEventType.CLICKED)
+        .one()
+    )
+    assert click.fingerprint is None
+
+
 def test_client_beacon_rejects_bogus_resolution(client, db, campaign_with_recipient):
     client.get("/track/landing", params={"t": "tok-known-123"})
     client.get("/track/client", params={"t": "tok-known-123", "res": "drop table", "lang": "en"})
