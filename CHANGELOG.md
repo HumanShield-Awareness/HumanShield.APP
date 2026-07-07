@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.7.0](https://github.com/securebitsorg/HumanShield.APP/compare/v0.6.0...v0.7.0) (2026-07-07)
+
+
+### Features
+
+* **campaigns:** Logo pro Template (CID-Inline) + Absendername = Kampagnenname ([63bc5c5](https://github.com/securebitsorg/HumanShield.APP/commit/63bc5c5cd4be96d016c62b553b41970f399d8fa2))
+* **db:** Core-Migrationen beim Start automatisch ausführen ([a389f2e](https://github.com/securebitsorg/HumanShield.APP/commit/a389f2e26af42ffb7b1d84451ba98516e698d1be))
+* **landing:** Logo-Upload für Landing Pages ({{ logo }}) ([a9f4661](https://github.com/securebitsorg/HumanShield.APP/commit/a9f4661c4af42466811924215cabbb2a63682112))
+
+
+### Dokumentation
+
+* **readme:** Docker-Compose-v2-Angabe präzisieren (aktuelles docker-compose-Plugin) ([9c6993d](https://github.com/securebitsorg/HumanShield.APP/commit/9c6993dd7b795c101c959b4f1eff2009487c2c2d))
+* **readme:** Systemanforderungen (Hardware) ergänzen ([9e5639d](https://github.com/securebitsorg/HumanShield.APP/commit/9e5639d1326f9beb9e5e182a18dcd93820261b0f))
+
 ## [0.6.0](https://github.com/securebitsorg/HumanShield.APP/compare/v0.5.0...v0.6.0) (2026-07-07)
 
 
