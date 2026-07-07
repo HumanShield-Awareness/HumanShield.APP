@@ -442,6 +442,12 @@ export const translations: Record<Lang, Record<string, string>> = {
     'lp.capture.off': 'Aus',
     'lp.err.save': 'Landing Page konnte nicht gespeichert werden.',
     'lp.err.delete': 'Landing Page konnte nicht gelöscht werden.',
+    'lp.library': 'Bibliothek',
+    'lp.library.title': 'Landing-Page-Bibliothek',
+    'lp.library.intro': 'Kuratierte Landing Pages passend zu den Awareness-Vorlagen. „Übernehmen" erstellt eine editierbare Kopie in deinen Landing Pages.',
+    'lp.library.use': 'Übernehmen',
+    'lp.library.back': 'Zurück',
+    'lp.library.capturesPw': 'Login mit Passworterfassung',
 
     // Ergebnisse
     'res.title': 'Ergebnisse',
@@ -1241,6 +1247,12 @@ export const translations: Record<Lang, Record<string, string>> = {
     'lp.capture.off': 'Off',
     'lp.err.save': 'Could not save the landing page.',
     'lp.err.delete': 'Could not delete the landing page.',
+    'lp.library': 'Library',
+    'lp.library.title': 'Landing page library',
+    'lp.library.intro': 'Curated landing pages matching the awareness templates. “Use” creates an editable copy in your landing pages.',
+    'lp.library.use': 'Use',
+    'lp.library.back': 'Back',
+    'lp.library.capturesPw': 'Login with password capture',
 
     // Results
     'res.title': 'Results',
