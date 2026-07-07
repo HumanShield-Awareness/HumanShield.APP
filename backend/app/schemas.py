@@ -428,6 +428,9 @@ class LandingPageBase(BaseModel):
     capture_passwords: bool = False
     redirect_url: str | None = None
     markdown_source: str | None = None
+    logo_b64: str | None = None
+
+    _v_logo = field_validator("logo_b64")(_validate_logo)
 
 
 class LandingPageCreate(LandingPageBase):
@@ -441,6 +444,9 @@ class LandingPageUpdate(BaseModel):
     capture_passwords: bool | None = None
     redirect_url: str | None = None
     markdown_source: str | None = None
+    logo_b64: str | None = None
+
+    _v_logo = field_validator("logo_b64")(_validate_logo)
 
 
 class LandingPageOut(LandingPageBase):

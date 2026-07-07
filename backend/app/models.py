@@ -365,6 +365,8 @@ class LandingPage(Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     html_content: Mapped[str] = mapped_column(Text, nullable=False)
     markdown_source: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # Optionales Logo (data:image/...;base64,...), im HTML über {{ logo }} platzierbar.
+    logo_b64: Mapped[str | None] = mapped_column(Text, nullable=True)
     capture_credentials: Mapped[bool] = mapped_column(default=False, nullable=False)
     capture_passwords: Mapped[bool] = mapped_column(default=False, nullable=False)
     redirect_url: Mapped[str | None] = mapped_column(String(1024), nullable=True)
