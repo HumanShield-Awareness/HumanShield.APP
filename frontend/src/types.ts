@@ -77,9 +77,16 @@ export interface CampaignResult {
   recipients: RecipientResult[]
 }
 
+export interface SeatStatus {
+  max_users: number | null
+  active_users: number
+  over_limit: boolean
+}
+
 export interface FeaturesResponse {
   features: Record<string, boolean>
   license: { status: string; customer: string | null; expires: string | null }
+  seats: SeatStatus
 }
 
 export interface VersionResponse {
@@ -100,6 +107,9 @@ export interface LicenseStatus {
   has_key: boolean
   key_from_env: boolean
   server_configured: boolean
+  max_users: number | null
+  active_users: number
+  over_limit: boolean
 }
 
 export interface SendingProfile {
@@ -123,6 +133,7 @@ export interface User {
   full_name: string
   role: 'admin' | 'user'
   is_active: boolean
+  is_primary: boolean
   twofa_enabled: boolean
   created_at: string
 }
