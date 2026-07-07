@@ -70,9 +70,20 @@ app = FastAPI(title="HumanShield.APP API", version=APP_VERSION, lifespan=lifespa
 # Session-Cookie fuer den OIDC-Authorization-Code-Flow (State/Nonce).
 app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY)
 
+# Mit allow_credentials=True ist ein Wildcard-Origin gefährlich (jede fremde Seite
+# könnte mit den Anmeldedaten des Nutzers auf die API zugreifen). Ein versehentlich
+# gesetztes "*" wird daher ignoriert statt durchgereicht.
+_cors_origins = settings.cors_origins_list
+if "*" in _cors_origins:
+    logger.warning(
+        "CORS_ORIGINS enthält '*' — mit Credentials unsicher und wird ignoriert. "
+        "Bitte konkrete Origins konfigurieren."
+    )
+    _cors_origins = [o for o in _cors_origins if o != "*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins_list,
+    allow_origins=_cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
