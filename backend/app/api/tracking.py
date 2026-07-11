@@ -67,16 +67,16 @@ def track_open(t: str, request: Request, db: Session = Depends(get_db)):
 def track_click(t: str, url: str, request: Request, db: Session = Depends(get_db)):
     event = record_event(db, tracking_token=t, event_type=TrackingEventType.CLICKED, **_client_meta(request))
 
-    # Open-Redirect-Schutz: nur bei bekanntem Tracking-Token und nur auf lokale
-    # relative Pfade weiterleiten. Keine externen Hosts/Schemes akzeptieren.
+    # Open-Redirect-Schutz: nur bei bekanntem Tracking-Token weiterleiten und
+    # nur auf valide http(s)- oder lokale relative Ziele.
     normalized_url = url.replace("\\", "")
     parsed = urlparse(normalized_url)
-    if (
-        event is None
-        or parsed.netloc
-        or parsed.scheme
-        or not normalized_url.startswith("/")
-    ):
+    if event is None:
+        return HTMLResponse(content=_DEFAULT_PAGE)
+    if parsed.scheme:
+        if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+            return HTMLResponse(content=_DEFAULT_PAGE)
+    elif parsed.netloc or not normalized_url.startswith("/"):
         return HTMLResponse(content=_DEFAULT_PAGE)
     return RedirectResponse(url=normalized_url)
 
