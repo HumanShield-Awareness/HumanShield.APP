@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.1](https://github.com/HumanShield-Awareness/HumanShield.APP/compare/v0.16.0...v0.16.1) (2026-07-12)
+
+
+### Bug Fixes
+
+* **update:** Update-Check-/Doku-URLs auf HumanShield-Awareness-Org umstellen ([#67](https://github.com/HumanShield-Awareness/HumanShield.APP/issues/67)) ([c6f6b19](https://github.com/HumanShield-Awareness/HumanShield.APP/commit/c6f6b19392c5ecc96c4e6c5c86519b76f7d0502b))
+
 ## [0.16.0](https://github.com/HumanShield-Awareness/HumanShield.APP/compare/v0.15.0...v0.16.0) (2026-07-12)
 
 
