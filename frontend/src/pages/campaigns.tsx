@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import Badge, { BadgeTone } from '../components/Badge'
 import CampaignWizard, { CampaignWizardValues } from '../components/CampaignWizard'
 import Card from '../components/Card'
@@ -30,6 +30,7 @@ const statusTone: Record<Campaign['status'], BadgeTone> = {
 
 export default function CampaignsPage() {
   const { t } = useI18n()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [campaigns, setCampaigns] = useState<Campaign[]>([])
   const [templates, setTemplates] = useState<Template[]>([])
   const [profiles, setProfiles] = useState<SendingProfile[]>([])
@@ -54,6 +55,14 @@ export default function CampaignsPage() {
       api.get<GroupSummary[]>('/groups').then((res) => setGroups(res.data)),
     ]).finally(() => setLoading(false))
   }, [])
+
+  // Sidebar-Untermenue "Neue Kampagne erstellen" oeffnet die Seite mit ?new=1.
+  useEffect(() => {
+    if (searchParams.get('new') === '1') {
+      setCreating(true)
+      setSearchParams({}, { replace: true })
+    }
+  }, [searchParams, setSearchParams])
 
   async function handleCreate(values: CampaignWizardValues) {
     setSubmitting(true)
