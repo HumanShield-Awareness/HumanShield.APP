@@ -144,7 +144,10 @@ async def send_campaign_messages(
     Tracking-Token) gerendert und ein Tracking-Pixel eingebettet. Ratelimiting
     ueber SMTP_BATCH_DELAY.
     """
-    results = {"success": 0, "failed": 0}
+    # sent_tokens: Tracking-Tokens der tatsaechlich erfolgreich zugestellten
+    # Empfaenger. Der Aufrufer markiert nur diese als versendet, damit
+    # Fehlversaende nicht faelschlich als "Abgeschickt" zaehlen.
+    results: dict = {"success": 0, "failed": 0, "sent_tokens": []}
 
     # Optionales Logo einmal dekodieren und als Inline-Bild (CID) vorbereiten.
     # Im HTML über {{ logo }} platzierbar; rendert zuverlässig in Mail-Clients
@@ -239,6 +242,7 @@ async def send_campaign_messages(
             try:
                 await client.send_message(msg, sender=from_email)
                 results["success"] += 1
+                results["sent_tokens"].append(token)
             except Exception as e:  # noqa: BLE001
                 results["failed"] += 1
                 logger.error("Zustellung an %s fehlgeschlagen: %s", recipient["email"], e)
