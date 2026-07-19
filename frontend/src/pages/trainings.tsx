@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import { PlayCircle } from 'lucide-react'
+import { FileDown, PlayCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Card from '../components/Card'
@@ -21,6 +21,20 @@ export interface MyAssignment {
   due_at: string
   status: string
   completed_at: string | null
+  completion_id: string | null
+}
+
+/** Lädt die PDF-Bescheinigung (auth-pflichtig) und stößt den Download an. */
+export async function downloadCertificate(completionId: string): Promise<void> {
+  const res = await api.get<Blob>(`/lms/my/completions/${completionId}/certificate`, {
+    responseType: 'blob',
+  })
+  const url = URL.createObjectURL(res.data)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `schulungsnachweis-${completionId}.pdf`
+  link.click()
+  URL.revokeObjectURL(url)
 }
 
 const statusStyles: Record<string, string> = {
@@ -88,13 +102,24 @@ export default function TrainingsPage() {
                   <td className="py-2 pr-4 font-mono tabular-nums text-text-secondary">{fmtDate(item.due_at)}</td>
                   <td className="py-2 pr-4 font-mono tabular-nums text-text-secondary">{fmtDate(item.completed_at)}</td>
                   <td className="py-2 text-right">
-                    <Link
-                      to={`/trainings/${item.id}`}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs text-text-primary hover:bg-bg"
-                    >
-                      <PlayCircle size={14} />
-                      {t('lms.open')}
-                    </Link>
+                    <span className="inline-flex items-center gap-2">
+                      {item.completion_id && (
+                        <button
+                          onClick={() => void downloadCertificate(item.completion_id!)}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs text-text-primary hover:bg-bg"
+                        >
+                          <FileDown size={14} />
+                          {t('lms.certificate')}
+                        </button>
+                      )}
+                      <Link
+                        to={`/trainings/${item.id}`}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs text-text-primary hover:bg-bg"
+                      >
+                        <PlayCircle size={14} />
+                        {t('lms.open')}
+                      </Link>
+                    </span>
                   </td>
                 </tr>
               ))}

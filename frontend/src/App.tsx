@@ -41,6 +41,7 @@ import TrainingsPage from './pages/trainings'
 import TrainingPlayerPage from './pages/trainings-player'
 import LmsAssignmentsPage from './pages/lms/assignments'
 import LmsCoursesPage from './pages/lms/courses'
+import LmsReportsPage from './pages/lms/reports'
 import LmsSettingsPage from './pages/settings/lms'
 import UsersPage from './pages/users'
 import { isAuthenticated } from './services/auth'
@@ -76,6 +77,7 @@ export default function App() {
           <Route path="/trainings/:assignmentId" element={<TrainingPlayerPage />} />
           <Route path="/lms/courses" element={<LmsCoursesPage />} />
           <Route path="/lms/assignments" element={<LmsAssignmentsPage />} />
+          <Route path="/lms/reports" element={<LmsReportsPage />} />
           <Route path="/users" element={<UsersPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/settings" element={<SettingsLayout />}>

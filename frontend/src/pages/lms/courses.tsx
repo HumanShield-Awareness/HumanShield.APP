@@ -2,8 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import { ExternalLink, Plus, Trash2, Upload } from 'lucide-react'
-import { FormEvent, useEffect, useRef, useState } from 'react'
+import { ExternalLink, ListChecks, Plus, Trash2, Upload } from 'lucide-react'
+import { FormEvent, useCallback, useEffect, useRef, useState } from 'react'
 import Card from '../../components/Card'
 import LockedFeatureNotice from '../../components/LockedFeatureNotice'
 import PageScaffold from '../../components/PageScaffold'
@@ -42,12 +42,133 @@ function fmtDuration(seconds: number | null): string {
   return `${m}:${String(s).padStart(2, '0')} min`
 }
 
+interface QuizQuestionDraft {
+  question_text: string
+  options: string[]
+  correct_option: number
+}
+
+/** Quiz-Editor eines Moduls: lädt die Fragen (inkl. Lösungen, Admin-Sicht)
+ *  und ersetzt sie beim Speichern komplett (POST-Semantik des Backends). */
+function QuizEditor({ moduleId }: { moduleId: string }) {
+  const { t } = useI18n()
+  const [questions, setQuestions] = useState<QuizQuestionDraft[]>([])
+  const [saved, setSaved] = useState(false)
+  const [busy, setBusy] = useState(false)
+
+  const load = useCallback(async () => {
+    const res = await api.get<QuizQuestionDraft[]>(`/lms/modules/${moduleId}/quiz`)
+    setQuestions(
+      res.data.map((q) => ({ question_text: q.question_text, options: [...q.options], correct_option: q.correct_option })),
+    )
+  }, [moduleId])
+
+  useEffect(() => {
+    void load()
+  }, [load])
+
+  function patch(qi: number, update: Partial<QuizQuestionDraft>) {
+    setQuestions((prev) => prev.map((q, i) => (i === qi ? { ...q, ...update } : q)))
+    setSaved(false)
+  }
+
+  async function save() {
+    setBusy(true)
+    try {
+      const valid = questions
+        .map((q) => ({ ...q, options: q.options.filter((o) => o.trim()) }))
+        .filter((q) => q.question_text.trim() && q.options.length >= 2)
+        .map((q) => ({ ...q, correct_option: Math.min(q.correct_option, q.options.length - 1) }))
+      await api.post(`/lms/modules/${moduleId}/quiz`, { questions: valid })
+      await load()
+      setSaved(true)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div className="flex w-full flex-col gap-3 rounded-md border border-border bg-bg p-3">
+      <p className="text-xs text-text-secondary">{t('lms.quiz.correct')}</p>
+      {questions.map((question, qi) => (
+        <div key={qi} className="flex flex-col gap-1.5 rounded-md border border-border bg-surface p-2">
+          <div className="flex items-center gap-2">
+            <input
+              value={question.question_text}
+              onChange={(e) => patch(qi, { question_text: e.target.value })}
+              placeholder={t('lms.quiz.questionPlaceholder')}
+              className={`${fieldClass} flex-1`}
+            />
+            <button
+              onClick={() => {
+                setQuestions((prev) => prev.filter((_, i) => i !== qi))
+                setSaved(false)
+              }}
+              className="text-text-secondary hover:text-status-danger"
+              aria-label={t('common.delete')}
+            >
+              <Trash2 size={14} />
+            </button>
+          </div>
+          {question.options.map((option, oi) => (
+            <div key={oi} className="ml-4 flex items-center gap-2">
+              <input
+                type="radio"
+                name={`correct-${moduleId}-${qi}`}
+                checked={question.correct_option === oi}
+                onChange={() => patch(qi, { correct_option: oi })}
+              />
+              <input
+                value={option}
+                onChange={(e) =>
+                  patch(qi, { options: question.options.map((o, i) => (i === oi ? e.target.value : o)) })
+                }
+                placeholder={t('lms.quiz.optionPlaceholder')}
+                className={`${fieldClass} flex-1`}
+              />
+            </div>
+          ))}
+          {question.options.length < 6 && (
+            <button
+              onClick={() => patch(qi, { options: [...question.options, ''] })}
+              className="ml-4 w-fit text-xs text-text-secondary hover:text-text-primary"
+            >
+              + {t('lms.quiz.addOption')}
+            </button>
+          )}
+        </div>
+      ))}
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => {
+            setQuestions((prev) => [...prev, { question_text: '', options: ['', ''], correct_option: 0 }])
+            setSaved(false)
+          }}
+          className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs hover:bg-surface"
+        >
+          <Plus size={13} />
+          {t('lms.quiz.addQuestion')}
+        </button>
+        <button
+          onClick={() => void save()}
+          disabled={busy}
+          className="inline-flex items-center rounded-full bg-accent px-4 py-1 text-xs font-medium text-white disabled:opacity-60"
+        >
+          {t('cw.save')}
+        </button>
+        {saved && <span className="text-xs text-green-600">{t('lms.quiz.saved')}</span>}
+      </div>
+    </div>
+  )
+}
+
 /** Ein Modul-Eintrag mit Upload (Multipart mit Fortschrittsanzeige) und Vorschau. */
 function ModuleRow({ courseId, module, onChanged }: { courseId: string; module: LmsModule; onChanged: () => void }) {
   const { t } = useI18n()
   const fileRef = useRef<HTMLInputElement | null>(null)
   const [uploadPercent, setUploadPercent] = useState<number | null>(null)
   const [uploadError, setUploadError] = useState(false)
+  const [quizOpen, setQuizOpen] = useState(false)
 
   async function upload(file: File) {
     setUploadError(false)
@@ -120,12 +241,24 @@ function ModuleRow({ courseId, module, onChanged }: { courseId: string; module: 
               {t('lms.modules.preview')}
             </button>
           )}
+          {module.quiz_required && (
+            <button
+              onClick={() => setQuizOpen((open) => !open)}
+              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs ${
+                quizOpen ? 'border-accent text-accent-text' : 'border-border hover:bg-bg'
+              }`}
+            >
+              <ListChecks size={13} />
+              {t('lms.quiz.edit')}
+            </button>
+          )}
           <button onClick={() => void remove()} className="text-text-secondary hover:text-status-danger" aria-label={t('common.delete')}>
             <Trash2 size={14} />
           </button>
         </>
       )}
       {uploadError && <span className="w-full text-xs text-status-danger">{t('lms.modules.uploadError')}</span>}
+      {quizOpen && <QuizEditor moduleId={module.id} />}
     </div>
   )
 }

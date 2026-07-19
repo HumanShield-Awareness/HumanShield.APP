@@ -2,17 +2,18 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import { ArrowLeft, CheckCircle2, CircleAlert } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, FileDown } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Card from '../components/Card'
+import LmsQuiz from '../components/LmsQuiz'
 import LmsVideoPlayer from '../components/LmsVideoPlayer'
 import LockedFeatureNotice from '../components/LockedFeatureNotice'
 import PageScaffold from '../components/PageScaffold'
 import { useFeatures } from '../hooks/useFeatures'
 import { useI18n } from '../i18n'
 import { api } from '../services/api'
-import { StatusBadge } from './trainings'
+import { StatusBadge, downloadCertificate } from './trainings'
 
 interface MyModule {
   id: string
@@ -31,9 +32,11 @@ interface MyAssignmentDetail {
   status: string
   due_at: string
   completed_at: string | null
+  completion_id: string | null
   modules: MyModule[]
   completion_coverage_percent: number
   max_playback_rate: number
+  quiz_pass_percent: number
 }
 
 export default function TrainingPlayerPage() {
@@ -79,16 +82,26 @@ export default function TrainingPlayerPage() {
       </Link>
 
       {detail.status === 'quiz_pending' && (
-        <p className="mb-4 flex max-w-2xl items-center gap-2 rounded-md border border-accent bg-accent/10 px-3 py-2 text-sm text-accent-text">
-          <CircleAlert size={16} className="shrink-0" />
-          {t('lms.quizPendingHint')}
-        </p>
+        <div className="mb-6 max-w-2xl">
+          <LmsQuiz assignmentId={detail.id} passPercent={detail.quiz_pass_percent} onPassed={() => void load()} />
+        </div>
       )}
       {detail.status === 'completed' && (
-        <p className="mb-4 flex max-w-2xl items-center gap-2 rounded-md border border-green-600 bg-green-600/10 px-3 py-2 text-sm text-green-600">
-          <CheckCircle2 size={16} className="shrink-0" />
-          {t('lms.completedHint')}
-        </p>
+        <div className="mb-4 flex max-w-2xl items-center justify-between gap-3 rounded-md border border-green-600 bg-green-600/10 px-3 py-2 text-sm text-green-600">
+          <span className="flex items-center gap-2">
+            <CheckCircle2 size={16} className="shrink-0" />
+            {t('lms.completedHint')}
+          </span>
+          {detail.completion_id && (
+            <button
+              onClick={() => void downloadCertificate(detail.completion_id!)}
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-green-600 px-3 py-1 text-xs hover:bg-green-600/10"
+            >
+              <FileDown size={14} />
+              {t('lms.certificate')}
+            </button>
+          )}
+        </div>
       )}
 
       <div className="flex flex-col gap-6 lg:flex-row">

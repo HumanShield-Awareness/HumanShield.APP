@@ -69,6 +69,7 @@ const adminNav: NavItem[] = [
   { to: '/users', labelKey: 'nav.users', icon: UserCog, end: false },
   { to: '/lms/courses', labelKey: 'nav.lmsCourses', icon: GraduationCap, end: false, tier: 'enterprise' },
   { to: '/lms/assignments', labelKey: 'nav.lmsAssignments', icon: ListChecks, end: false, tier: 'enterprise' },
+  { to: '/lms/reports', labelKey: 'nav.lmsReports', icon: FileBarChart, end: false, tier: 'enterprise' },
   { to: '/settings', labelKey: 'nav.settings', icon: Settings, end: false },
   { to: '/integrations', labelKey: 'nav.integrations', icon: Blocks, end: false },
 ]
